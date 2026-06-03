@@ -57,11 +57,11 @@ export default function HomeView() {
   }, [loadCourses])
 
   const categories = [
-    { name: 'برمجة', icon: Code, color: 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400', count: '20+ دورة' },
-    { name: 'تصميم', icon: Palette, color: 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-400', count: '15+ دورة' },
-    { name: 'أعمال', icon: Briefcase, color: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400', count: '10+ دورة' },
-    { name: 'لغات', icon: Globe, color: 'bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-400', count: '8+ دورة' },
-    { name: 'علوم بيانات', icon: BarChart3, color: 'bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-400', count: '12+ دورة' },
+    { name: 'برمجة', icon: Code, color: 'bg-emerald-100 text-emerald-700', count: '20+ دورة' },
+    { name: 'تصميم', icon: Palette, color: 'bg-purple-100 text-purple-700', count: '15+ دورة' },
+    { name: 'أعمال', icon: Briefcase, color: 'bg-amber-100 text-amber-700', count: '10+ دورة' },
+    { name: 'لغات', icon: Globe, color: 'bg-sky-100 text-sky-700', count: '8+ دورة' },
+    { name: 'علوم بيانات', icon: BarChart3, color: 'bg-rose-100 text-rose-700', count: '12+ دورة' },
   ]
 
   const stats = [
@@ -82,7 +82,7 @@ export default function HomeView() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-bl from-emerald-600 via-emerald-700 to-teal-800 dark:from-emerald-800 dark:via-emerald-900 dark:to-gray-900 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-bl from-emerald-600 via-emerald-700 to-teal-800 text-white">
         {/* Decorative blobs */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-teal-400/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-emerald-400/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
@@ -110,7 +110,7 @@ export default function HomeView() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
                 تعلّم بلا حدود
                 <br />
-                <span className="text-emerald-200 dark:text-emerald-300">مع أفضل المدربين</span>
+                <span className="text-emerald-200">مع أفضل المدربين</span>
               </h1>
 
               <p className="text-lg md:text-xl text-emerald-100 mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
@@ -120,7 +120,7 @@ export default function HomeView() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
                 <Button
                   size="lg"
-                  className="bg-white dark:bg-gray-900 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-800 text-lg px-8 py-6 rounded-xl font-bold shadow-lg shadow-emerald-900/30 hover:shadow-xl hover:shadow-emerald-900/40 transition-all"
+                  className="bg-white text-emerald-700 hover:bg-emerald-50 text-lg px-8 py-6 rounded-xl font-bold shadow-lg shadow-emerald-900/30 hover:shadow-xl hover:shadow-emerald-900/40 transition-all"
                   onClick={() => navigate('courses')}
                 >
                   استكشف الدورات
@@ -137,7 +137,7 @@ export default function HomeView() {
               </div>
 
               {/* Trust indicators */}
-              <div className="flex flex-wrap gap-4 justify-center lg:justify-start text-sm text-emerald-200 dark:text-emerald-300">
+              <div className="flex flex-wrap gap-4 justify-center lg:justify-start text-sm text-emerald-200">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle className="w-4 h-4 text-emerald-300" />
                   شهادات معتمدة
@@ -172,28 +172,28 @@ export default function HomeView() {
                 <motion.div
                   animate={{ y: [0, -8, 0] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-4 -right-4 bg-white dark:bg-gray-800 rounded-xl px-4 py-3 shadow-lg flex items-center gap-2"
+                  className="absolute -top-4 -right-4 bg-white rounded-xl px-4 py-3 shadow-lg flex items-center gap-2"
                 >
-                  <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
-                    <Award className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                  <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
+                    <Award className="w-4 h-4 text-amber-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">شهادة</p>
-                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">معتمدة</p>
+                    <p className="text-xs text-gray-500">شهادة</p>
+                    <p className="text-sm font-bold text-gray-900">معتمدة</p>
                   </div>
                 </motion.div>
                 {/* Floating badge 2 */}
                 <motion.div
                   animate={{ y: [0, 8, 0] }}
                   transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 rounded-xl px-4 py-3 shadow-lg flex items-center gap-2"
+                  className="absolute -bottom-4 -left-4 bg-white rounded-xl px-4 py-3 shadow-lg flex items-center gap-2"
                 >
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
-                    <Users className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <Users className="w-4 h-4 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">طلاب نشطون</p>
-                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">500+</p>
+                    <p className="text-xs text-gray-500">طلاب نشطون</p>
+                    <p className="text-sm font-bold text-gray-900">500+</p>
                   </div>
                 </motion.div>
               </div>
@@ -203,9 +203,9 @@ export default function HomeView() {
       </section>
 
       {/* Stats Bar */}
-      <section className="relative -mt-1 bg-gradient-to-b from-teal-800 dark:from-gray-900 to-gray-50 dark:to-gray-900">
+      <section className="relative -mt-1 bg-gradient-to-b from-teal-800 to-gray-50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8 -mt-12 relative z-10 transition-colors duration-300">
+          <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 -mt-12 relative z-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
               {stats.map((stat, i) => (
                 <motion.div
@@ -216,12 +216,12 @@ export default function HomeView() {
                   className="text-center"
                 >
                   <div className="flex justify-center mb-3">
-                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
-                      <stat.icon className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center">
+                      <stat.icon className="w-7 h-7 text-emerald-600" />
                     </div>
                   </div>
-                  <div className="text-3xl font-extrabold text-gray-900 dark:text-gray-100">{stat.value}</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">{stat.label}</div>
+                  <div className="text-3xl font-extrabold text-gray-900">{stat.value}</div>
+                  <div className="text-sm text-gray-500 mt-1 font-medium">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
@@ -230,24 +230,24 @@ export default function HomeView() {
       </section>
 
       {/* Featured Courses */}
-      <section className="bg-gray-50 dark:bg-gray-900 py-16 transition-colors duration-300">
+      <section className="bg-gray-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">الدورات المميزة</h2>
-            <p className="text-gray-600 dark:text-gray-400">اختر من بين أفضل الدورات التعليمية</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">الدورات المميزة</h2>
+            <p className="text-gray-600">اختر من بين أفضل الدورات التعليمية</p>
           </div>
 
           {/* Loading Skeleton */}
           {loading && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map(i => (
-                <Card key={i} className="overflow-hidden border-0 shadow-md animate-pulse dark:bg-gray-800">
-                  <div className="aspect-video bg-gray-200 dark:bg-gray-700" />
+                <Card key={i} className="overflow-hidden border-0 shadow-md animate-pulse">
+                  <div className="aspect-video bg-gray-200" />
                   <CardContent className="p-5 space-y-3">
-                    <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
-                    <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+                    <div className="h-5 bg-gray-200 rounded w-1/3" />
+                    <div className="h-5 bg-gray-200 rounded w-3/4" />
+                    <div className="h-4 bg-gray-200 rounded w-1/2" />
+                    <div className="h-4 bg-gray-200 rounded w-1/3" />
                   </CardContent>
                 </Card>
               ))}
@@ -257,12 +257,12 @@ export default function HomeView() {
           {/* Error State */}
           {error && !loading && (
             <div className="text-center py-12">
-              <BookOpen className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-500 dark:text-gray-400 mb-2">حدث خطأ أثناء تحميل الدورات</h3>
-              <p className="text-gray-400 dark:text-gray-500 mb-4">يرجى تحديث الصفحة والمحاولة مرة أخرى</p>
+              <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-500 mb-2">حدث خطأ أثناء تحميل الدورات</h3>
+              <p className="text-gray-400 mb-4">يرجى تحديث الصفحة والمحاولة مرة أخرى</p>
               <Button
                 variant="outline"
-                className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-500 dark:text-emerald-400 dark:hover:bg-emerald-900/30"
+                className="border-emerald-600 text-emerald-600 hover:bg-emerald-50"
                 onClick={loadCourses}
               >
                 إعادة المحاولة
@@ -276,10 +276,10 @@ export default function HomeView() {
               {featuredCourses.map((course, i) => (
                   <Card
                     key={course.id}
-                    className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 group border-0 shadow-md dark:bg-gray-800 dark:hover:shadow-gray-900/50"
+                    className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 group border-0 shadow-md"
                     onClick={() => navigate('course-detail', { courseId: course.id })}
                   >
-                    <div className="aspect-video bg-gray-200 dark:bg-gray-700 overflow-hidden relative">
+                    <div className="aspect-video bg-gray-200 overflow-hidden relative">
                       {course.thumbnailUrl ? (
                         <img
                           src={course.thumbnailUrl}
@@ -287,23 +287,23 @@ export default function HomeView() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-bl from-emerald-400 to-teal-500 dark:from-emerald-600 dark:to-teal-700 flex items-center justify-center">
+                        <div className="w-full h-full bg-gradient-to-bl from-emerald-400 to-teal-500 flex items-center justify-center">
                           <BookOpen className="w-12 h-12 text-white/50" />
                         </div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
                     <CardContent className="p-5">
-                      <Badge className="mb-2 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-xs font-medium">{course.category}</Badge>
-                      <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 text-base leading-relaxed">{course.title}</h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{course.instructor}</p>
+                      <Badge className="mb-2 bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-xs font-medium">{course.category}</Badge>
+                      <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 text-base leading-relaxed">{course.title}</h3>
+                      <p className="text-sm text-gray-500 mb-3">{course.instructor}</p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1">
                           <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{course.rating}</span>
-                          <span className="text-xs text-gray-400 dark:text-gray-500">({course.studentsCount})</span>
+                          <span className="text-sm font-semibold text-gray-700">{course.rating}</span>
+                          <span className="text-xs text-gray-400">({course.studentsCount})</span>
                         </div>
-                        <span className="font-bold text-emerald-600 dark:text-emerald-400 text-base">{course.price === 0 ? 'مجاني' : `${course.price} ر.س`}</span>
+                        <span className="font-bold text-emerald-600 text-base">{course.price === 0 ? 'مجاني' : `${course.price} ر.س`}</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -315,7 +315,7 @@ export default function HomeView() {
             <div className="text-center mt-8">
               <Button
                 variant="outline"
-                className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-500 dark:text-emerald-400 dark:hover:bg-emerald-900/30"
+                className="border-emerald-600 text-emerald-600 hover:bg-emerald-50"
                 onClick={() => navigate('courses')}
               >
                 عرض جميع الدورات
@@ -327,11 +327,11 @@ export default function HomeView() {
       </section>
 
       {/* Categories */}
-      <section className="py-16 bg-white dark:bg-gray-950 transition-colors duration-300">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">تصفح حسب التصنيف</h2>
-            <p className="text-gray-600 dark:text-gray-400">اختر المجال الذي يناسب اهتماماتك</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">تصفح حسب التصنيف</h2>
+            <p className="text-gray-600">اختر المجال الذي يناسب اهتماماتك</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {categories.map((cat, i) => (
@@ -342,14 +342,14 @@ export default function HomeView() {
                 transition={{ delay: i * 0.05, duration: 0.3 }}
               >
                 <Card
-                  className="cursor-pointer hover:shadow-md transition-all duration-300 text-center p-6 group dark:bg-gray-800 dark:border-gray-700 dark:hover:shadow-gray-900/50"
+                  className="cursor-pointer hover:shadow-md transition-all duration-300 text-center p-6 group"
                   onClick={() => navigate('courses')}
                 >
                   <div className={`w-16 h-16 rounded-2xl ${cat.color} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}>
                     <cat.icon className="w-8 h-8" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{cat.name}</h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{cat.count}</p>
+                  <h3 className="font-semibold text-gray-900 mb-1">{cat.name}</h3>
+                  <p className="text-xs text-gray-500">{cat.count}</p>
                 </Card>
               </motion.div>
             ))}
@@ -358,11 +358,11 @@ export default function HomeView() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">ماذا يقول طلابنا</h2>
-            <p className="text-gray-600 dark:text-gray-400 text-lg">تجارب حقيقية من طلاب استفادوا من منصتنا</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">ماذا يقول طلابنا</h2>
+            <p className="text-gray-600 text-lg">تجارب حقيقية من طلاب استفادوا من منصتنا</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
@@ -372,20 +372,20 @@ export default function HomeView() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.15, duration: 0.4 }}
               >
-                <Card className="p-6 h-full border-0 shadow-md hover:shadow-lg transition-all duration-300 dark:bg-gray-800 dark:shadow-gray-900/30">
+                <Card className="p-6 h-full border-0 shadow-md hover:shadow-lg transition-all duration-300">
                   <div className="flex items-center gap-1 mb-4">
                     {[1, 2, 3, 4, 5].map((s) => (
                       <Star key={s} className="w-5 h-5 text-amber-500 fill-amber-500" />
                     ))}
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-5 text-sm leading-relaxed">&ldquo;{t.text}&rdquo;</p>
+                  <p className="text-gray-600 mb-5 text-sm leading-relaxed">&ldquo;{t.text}&rdquo;</p>
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold text-lg">
+                    <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">
                       {t.name.charAt(0)}
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900 dark:text-gray-100">{t.name}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{t.role}</p>
+                      <p className="font-semibold text-gray-900">{t.name}</p>
+                      <p className="text-sm text-gray-500">{t.role}</p>
                     </div>
                   </div>
                 </Card>
@@ -396,13 +396,13 @@ export default function HomeView() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-gradient-to-bl from-emerald-600 to-teal-700 dark:from-emerald-800 dark:to-gray-900 text-white transition-colors duration-300">
+      <section className="py-16 bg-gradient-to-bl from-emerald-600 to-teal-700 text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">ابدأ رحلة التعلم اليوم</h2>
-          <p className="text-emerald-100 dark:text-emerald-200 mb-8 text-lg">انضم إلى آلاف الطلاب الذين يطورون مهاراتهم يومياً</p>
+          <p className="text-emerald-100 mb-8 text-lg">انضم إلى آلاف الطلاب الذين يطورون مهاراتهم يومياً</p>
           <Button
             size="lg"
-            className="bg-white dark:bg-gray-900 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-800 text-lg px-10 py-6 rounded-xl font-semibold transition-all"
+            className="bg-white text-emerald-700 hover:bg-emerald-50 text-lg px-10 py-6 rounded-xl font-semibold transition-all"
             onClick={() => navigate('courses')}
           >
             سجّل الآن مجاناً
