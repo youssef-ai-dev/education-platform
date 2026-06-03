@@ -57,14 +57,18 @@ export default function Header() {
           {/* Search */}
           <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2">
             <div className="relative">
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
                 placeholder="ابحث عن دورة..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pr-9 w-56 bg-gray-50 border-gray-200 focus:border-emerald-500"
+                className="pr-10 w-64 h-10 text-sm bg-gray-50 border-gray-200 rounded-lg focus:border-emerald-500 focus:ring-emerald-500/20"
               />
             </div>
+            <Button type="submit" size="sm" className="bg-emerald-600 hover:bg-emerald-700 h-10 px-5 rounded-lg font-medium">
+              <Search className="w-4 h-4 ml-1" />
+              بحث
+            </Button>
           </form>
 
           {/* User Info */}

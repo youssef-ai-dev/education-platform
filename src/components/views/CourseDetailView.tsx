@@ -247,10 +247,13 @@ export default function CourseDetailView() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="lg:max-w-3xl">
           <Tabs defaultValue="curriculum" className="w-full">
-            <TabsList className="w-full justify-start bg-white border">
-              <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
-              <TabsTrigger value="curriculum">المنهج</TabsTrigger>
-              <TabsTrigger value="quizzes">الاختبارات</TabsTrigger>
+            <TabsList className="w-full justify-start bg-white border border-gray-200 rounded-xl p-1 h-auto gap-1">
+              <TabsTrigger value="overview" className="px-6 py-2.5 text-sm font-semibold rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all">نظرة عامة
+              </TabsTrigger>
+              <TabsTrigger value="curriculum" className="px-6 py-2.5 text-sm font-semibold rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all">المنهج
+              </TabsTrigger>
+              <TabsTrigger value="quizzes" className="px-6 py-2.5 text-sm font-semibold rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all">الاختبارات
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="mt-6">

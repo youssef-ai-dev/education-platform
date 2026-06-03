@@ -137,33 +137,34 @@ export default function HomeView() {
                 transition={{ delay: i * 0.1, duration: 0.4 }}
               >
                 <Card
-                  className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+                  className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 group border-0 shadow-md"
                   onClick={() => navigate('course-detail', { courseId: course.id })}
                 >
-                  <div className="aspect-video bg-gray-200 overflow-hidden">
+                  <div className="aspect-video bg-gray-200 overflow-hidden relative">
                     {course.thumbnailUrl ? (
                       <img
                         src={course.thumbnailUrl}
                         alt={course.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-bl from-emerald-400 to-teal-500 flex items-center justify-center">
                         <BookOpen className="w-12 h-12 text-white/50" />
                       </div>
                     )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-                  <CardContent className="p-4">
-                    <Badge className="mb-2 bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-xs">{course.category}</Badge>
-                    <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 text-sm leading-relaxed">{course.title}</h3>
-                    <p className="text-xs text-gray-500 mb-3">{course.instructor}</p>
+                  <CardContent className="p-5">
+                    <Badge className="mb-2 bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-xs font-medium">{course.category}</Badge>
+                    <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 text-base leading-relaxed">{course.title}</h3>
+                    <p className="text-sm text-gray-500 mb-3">{course.instructor}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1">
-                        <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                        <span className="text-sm font-medium text-gray-700">{course.rating}</span>
+                        <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                        <span className="text-sm font-semibold text-gray-700">{course.rating}</span>
                         <span className="text-xs text-gray-400">({course.studentsCount})</span>
                       </div>
-                      <span className="font-bold text-emerald-600">{course.price === 0 ? 'مجاني' : `${course.price} ر.س`}</span>
+                      <span className="font-bold text-emerald-600 text-base">{course.price === 0 ? 'مجاني' : `${course.price} ر.س`}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -219,7 +220,7 @@ export default function HomeView() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-gray-900 mb-3">ماذا يقول طلابنا</h2>
-            <p className="text-gray-600">تجارب حقيقية من طلاب استفادوا من منصتنا</p>
+            <p className="text-gray-600 text-lg">تجارب حقيقية من طلاب استفادوا من منصتنا</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
@@ -229,20 +230,20 @@ export default function HomeView() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.15, duration: 0.4 }}
               >
-                <Card className="p-6 h-full">
-                  <div className="flex items-center gap-1 mb-3">
+                <Card className="p-6 h-full border-0 shadow-md hover:shadow-lg transition-shadow">
+                  <div className="flex items-center gap-1 mb-4">
                     {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="w-4 h-4 text-amber-500 fill-amber-500" />
+                      <Star key={s} className="w-5 h-5 text-amber-500 fill-amber-500" />
                     ))}
                   </div>
-                  <p className="text-gray-600 mb-4 text-sm leading-relaxed">&ldquo;{t.text}&rdquo;</p>
+                  <p className="text-gray-600 mb-5 text-sm leading-relaxed">&ldquo;{t.text}&rdquo;</p>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
+                    <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">
                       {t.name.charAt(0)}
                     </div>
                     <div>
-                      <p className="font-semibold text-sm text-gray-900">{t.name}</p>
-                      <p className="text-xs text-gray-500">{t.role}</p>
+                      <p className="font-semibold text-gray-900">{t.name}</p>
+                      <p className="text-sm text-gray-500">{t.role}</p>
                     </div>
                   </div>
                 </Card>
