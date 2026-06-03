@@ -117,10 +117,10 @@ export default function CourseDetailView() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-7xl mx-auto px-4 animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/3" />
-          <div className="h-64 bg-gray-200 rounded-xl" />
+          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+          <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded-xl" />
         </div>
       </div>
     )
@@ -128,8 +128,8 @@ export default function CourseDetailView() {
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-500">الدورة غير موجودة</p>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <p className="text-gray-500 dark:text-gray-400">الدورة غير موجودة</p>
       </div>
     )
   }
@@ -137,9 +137,9 @@ export default function CourseDetailView() {
   const isEnrolled = !!enrollment
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Course Header */}
-      <div className="bg-gradient-to-bl from-emerald-600 to-teal-700 text-white">
+      <div className="bg-gradient-to-bl from-emerald-600 to-teal-700 dark:from-emerald-800 dark:to-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <button onClick={() => navigate('courses')} className="text-emerald-200 hover:text-white mb-4 flex items-center gap-1 text-sm">
             <ArrowRight className="w-4 h-4" />
@@ -164,7 +164,7 @@ export default function CourseDetailView() {
 
             {/* Sidebar Card */}
             <div className="lg:w-80">
-              <Card className="bg-white text-gray-900 overflow-hidden">
+              <Card className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 overflow-hidden">
                 {/* Video Preview */}
                 <div className="aspect-video bg-gray-900 relative group cursor-pointer">
                   {course.thumbnailUrl ? (
@@ -179,13 +179,13 @@ export default function CourseDetailView() {
                   </div>
                 </div>
                 <CardContent className="p-5">
-                  <div className="text-3xl font-bold text-emerald-600 mb-4">
+                  <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-4">
                     {course.price === 0 ? 'مجاني' : `${course.price} ر.س`}
                   </div>
 
                   {isEnrolled ? (
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between text-sm text-gray-600">
+                      <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300">
                         <span>التقدم</span>
                         <span>{Math.round(enrollment.progress)}%</span>
                       </div>
@@ -229,7 +229,7 @@ export default function CourseDetailView() {
                     </Dialog>
                   )}
 
-                  <div className="mt-5 space-y-3 text-sm text-gray-600">
+                  <div className="mt-5 space-y-3 text-sm text-gray-600 dark:text-gray-300">
                     <div className="flex items-center gap-2"><Monitor className="w-4 h-4 text-emerald-600" /> {course.lessons?.length ?? 0} درس تعليمي</div>
                     <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-emerald-600" /> مدة الدورة: {course.duration}</div>
                     <div className="flex items-center gap-2"><FileQuestion className="w-4 h-4 text-emerald-600" /> {course.quizzes?.length ?? 0} اختبار</div>
@@ -247,7 +247,7 @@ export default function CourseDetailView() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="lg:max-w-3xl">
           <Tabs defaultValue="curriculum" className="w-full">
-            <TabsList className="w-full justify-start bg-white border border-gray-200 rounded-xl p-1 h-auto gap-1">
+            <TabsList className="w-full justify-start bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-1 h-auto gap-1">
               <TabsTrigger value="overview" className="px-6 py-2.5 text-sm font-semibold rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all">نظرة عامة
               </TabsTrigger>
               <TabsTrigger value="curriculum" className="px-6 py-2.5 text-sm font-semibold rounded-lg data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all">المنهج
@@ -257,13 +257,13 @@ export default function CourseDetailView() {
             </TabsList>
 
             <TabsContent value="overview" className="mt-6">
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold mb-4">عن هذه الدورة</h3>
-                <p className="text-gray-600 leading-relaxed mb-6">{course.description}</p>
-                <h4 className="font-semibold mb-3">ماذا ستتعلم</h4>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+                <h3 className="text-xl font-bold mb-4 dark:text-gray-100">عن هذه الدورة</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">{course.description}</p>
+                <h4 className="font-semibold mb-3 dark:text-gray-200">ماذا ستتعلم</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {(course.lessons ?? []).map((lesson) => (
-                    <div key={lesson.id} className="flex items-center gap-2 text-sm text-gray-600">
+                    <div key={lesson.id} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                       <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
                       <span>{lesson.title}</span>
                     </div>
@@ -291,12 +291,12 @@ export default function CourseDetailView() {
                     }}
                   >
                     <CardContent className="p-4 flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-sm shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
                         {index + 1}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-gray-900 text-sm truncate">{lesson.title}</h4>
-                        <p className="text-xs text-gray-500 mt-1">{lesson.duration}</p>
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-sm truncate">{lesson.title}</h4>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{lesson.duration}</p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {lesson.isFree && (
@@ -318,11 +318,11 @@ export default function CourseDetailView() {
             <TabsContent value="quizzes" className="mt-6">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
                 {(course.quizzes ?? []).map((quiz) => (
-                  <Card key={quiz.id} className="overflow-hidden">
+                  <Card key={quiz.id} className="overflow-hidden dark:bg-gray-800">
                     <CardContent className="p-5 flex items-center justify-between">
                       <div>
-                        <h4 className="font-semibold text-gray-900">{quiz.title}</h4>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100">{quiz.title}</h4>
+                        <div className="flex items-center gap-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
                           <span className="flex items-center gap-1"><FileQuestion className="w-4 h-4" /> {quiz.questions?.length ?? 0} سؤال</span>
                           <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {quiz.timeLimit} دقيقة</span>
                           <span>درجة النجاح: {quiz.passingScore}%</span>

@@ -12,6 +12,7 @@ import { motion } from 'framer-motion'
 interface CourseData {
   id: string
   title: string
+  category: string
   thumbnailUrl: string | null
   lessons: { id: string; title: string; description: string; duration: string; order: number; isFree: boolean }[]
   quizzes: { id: string; title: string }[]
@@ -27,11 +28,10 @@ const COURSE_VIDEOS: Record<string, string[]> = {
   'default': ['dQw4w9WgXcQ', 'LXb3EKWsInQ', 'jNQXAC9IVRw', '9bZkp7q19f0'],
 }
 
-function getVideoId(courseTitle: string, lessonIndex: number): string {
-  for (const [key, videos] of Object.entries(COURSE_VIDEOS)) {
-    if (courseTitle.includes(key)) {
-      return videos[lessonIndex % videos.length]
-    }
+function getVideoId(courseCategory: string, lessonIndex: number): string {
+  // Match by category first (more reliable than title matching)
+  if (COURSE_VIDEOS[courseCategory]) {
+    return COURSE_VIDEOS[courseCategory][lessonIndex % COURSE_VIDEOS[courseCategory].length]
   }
   return COURSE_VIDEOS['default'][lessonIndex % COURSE_VIDEOS['default'].length]
 }
@@ -62,7 +62,7 @@ export default function LessonView() {
         setCourse(data)
         if (data.lessons) {
           const idx = data.lessons.findIndex((l: { id: string }) => l.id === selectedLessonId)
-          setCurrentVideoId(getVideoId(data.title, idx >= 0 ? idx : 0))
+          setCurrentVideoId(getVideoId(data.category, idx >= 0 ? idx : 0))
         }
       })
       .catch(() => {})

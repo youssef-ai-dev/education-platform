@@ -154,7 +154,11 @@ export default function QuizResultView() {
                 <Button
                   variant="outline"
                   className="flex-1 border-emerald-600 text-emerald-600 py-5 text-base font-semibold"
-                  onClick={() => navigate('quiz', { quizId: '', courseId: selectedCourseId || '' })}
+                  onClick={() => {
+                    // Reset quiz result and navigate back to course detail to retry
+                    setQuizResult(null)
+                    navigate('course-detail', { courseId: selectedCourseId || '' })
+                  }}
                 >
                   <RotateCcw className="w-5 h-5 ml-1" />
                   حاول مرة أخرى

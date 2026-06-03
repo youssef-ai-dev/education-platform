@@ -149,18 +149,18 @@ export default function DashboardView() {
 
   if (!studentEmail) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="max-w-md w-full mx-4"
         >
-          <Card className="p-8 text-center border-0 shadow-xl">
-            <div className="w-20 h-20 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-4">
-              <BookOpen className="w-10 h-10 text-emerald-600" />
+          <Card className="p-8 text-center border-0 shadow-xl dark:bg-gray-800">
+            <div className="w-20 h-20 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center mx-auto mb-4">
+              <BookOpen className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">لوحة التحكم</h2>
-            <p className="text-gray-600 mb-6">سجّل دخولك لمتابعة تقدمك في الدورات</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">لوحة التحكم</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">سجّل دخولك لمتابعة تقدمك في الدورات</p>
             <div className="space-y-3 text-right">
               <div className="space-y-2">
                 <Label htmlFor="dash-name">الاسم الكامل</Label>
@@ -181,9 +181,9 @@ export default function DashboardView() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
-      <div className="bg-gradient-to-bl from-emerald-600 to-teal-700 text-white py-8">
+      <div className="bg-gradient-to-bl from-emerald-600 to-teal-700 dark:from-emerald-800 dark:to-gray-900 text-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-2xl font-bold">
@@ -207,14 +207,14 @@ export default function DashboardView() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
             >
-              <Card className="p-5 border-0 shadow-md hover:shadow-lg transition-shadow">
+              <Card className="p-5 border-0 shadow-md hover:shadow-lg transition-shadow dark:bg-gray-800">
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 rounded-xl ${stat.color} flex items-center justify-center`}>
                     <stat.icon className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-2xl font-extrabold text-gray-900">{stat.value}</p>
-                    <p className="text-xs text-gray-500 font-medium">{stat.label}</p>
+                    <p className="text-2xl font-extrabold text-gray-900 dark:text-gray-100">{stat.value}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">{stat.label}</p>
                   </div>
                 </div>
               </Card>
@@ -226,8 +226,8 @@ export default function DashboardView() {
         {enrollments.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             {/* Progress Bar Chart */}
-            <Card className="lg:col-span-2 border-0 shadow-md p-5">
-              <h3 className="font-bold text-gray-900 mb-4 text-lg">تقدم الدورات</h3>
+            <Card className="lg:col-span-2 border-0 shadow-md p-5 dark:bg-gray-800">
+              <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-4 text-lg">تقدم الدورات</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={progressData} layout="vertical" margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
@@ -245,8 +245,8 @@ export default function DashboardView() {
             </Card>
 
             {/* Category Pie Chart */}
-            <Card className="border-0 shadow-md p-5">
-              <h3 className="font-bold text-gray-900 mb-4 text-lg">التخصصات</h3>
+            <Card className="border-0 shadow-md p-5 dark:bg-gray-800">
+              <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-4 text-lg">التخصصات</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -274,9 +274,9 @@ export default function DashboardView() {
 
         {/* Weekly Activity */}
         {enrollments.length > 0 && (
-          <Card className="border-0 shadow-md p-5 mb-8">
+          <Card className="border-0 shadow-md p-5 mb-8 dark:bg-gray-800">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-900 text-lg">النشاط الأسبوعي</h3>
+              <h3 className="font-bold text-gray-900 dark:text-gray-100 text-lg">النشاط الأسبوعي</h3>
               <Badge className="bg-emerald-100 text-emerald-700">
                 <Flame className="w-3 h-3 ml-1" />
                 {weeklyData.reduce((a, d) => a + d.hours, 0).toFixed(1)} ساعة هذا الأسبوع
@@ -307,20 +307,20 @@ export default function DashboardView() {
 
         {/* Enrolled Courses */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">الدورات المسجلة</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">الدورات المسجلة</h2>
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[1, 2].map(i => (
-                <Card key={i} className="animate-pulse border-0 shadow-md"><CardContent className="p-4"><div className="h-24 bg-gray-200 rounded" /></CardContent></Card>
+                <Card key={i} className="animate-pulse border-0 shadow-md dark:bg-gray-800"><CardContent className="p-4"><div className="h-24 bg-gray-200 dark:bg-gray-700 rounded" /></CardContent></Card>
               ))}
             </div>
           ) : enrollments.length === 0 ? (
-            <Card className="p-8 text-center border-0 shadow-md">
-              <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-3">
-                <BookOpen className="w-8 h-8 text-gray-300" />
+            <Card className="p-8 text-center border-0 shadow-md dark:bg-gray-800">
+              <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-3">
+                <BookOpen className="w-8 h-8 text-gray-300 dark:text-gray-500" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-500 mb-2">لم تسجل في أي دورة بعد</h3>
-              <p className="text-gray-400 mb-4 text-sm">استكشف الدورات المتاحة وابدأ رحلة التعلم</p>
+              <h3 className="text-lg font-semibold text-gray-500 dark:text-gray-400 mb-2">لم تسجل في أي دورة بعد</h3>
+              <p className="text-gray-400 dark:text-gray-500 mb-4 text-sm">استكشف الدورات المتاحة وابدأ رحلة التعلم</p>
               <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => navigate('courses')}>
                 استكشف الدورات
               </Button>
@@ -334,7 +334,7 @@ export default function DashboardView() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
                 >
-                  <Card className="overflow-hidden hover:shadow-lg transition-shadow border-0 shadow-md">
+                  <Card className="overflow-hidden hover:shadow-lg transition-shadow border-0 shadow-md dark:bg-gray-800">
                     <CardContent className="p-4">
                       <div className="flex gap-4">
                         <div className="w-28 h-20 rounded-xl bg-gray-200 overflow-hidden shrink-0">
@@ -347,8 +347,8 @@ export default function DashboardView() {
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-gray-900 text-sm truncate">{enrollment.course.title}</h3>
-                          <p className="text-xs text-gray-500 mt-0.5">{enrollment.course.instructor}</p>
+                          <h3 className="font-bold text-gray-900 dark:text-gray-100 text-sm truncate">{enrollment.course.title}</h3>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{enrollment.course.instructor}</p>
                           <div className="flex items-center gap-2 mt-2">
                             <Progress value={enrollment.progress} className="h-2 flex-1" />
                             <span className="text-xs text-gray-500 shrink-0 font-semibold">{Math.round(enrollment.progress)}%</span>
@@ -394,7 +394,7 @@ export default function DashboardView() {
         {/* Certificates */}
         {certificates.length > 0 && (
           <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">شهاداتي</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">شهاداتي</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {certificates.map((cert, i) => (
                 <motion.div
