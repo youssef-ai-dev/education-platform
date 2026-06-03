@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Search, Star, BookOpen, Clock, Users, Sparkles, GraduationCap, Filter } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { getCourses } from '@/lib/static-data'
 
 interface Course {
   id: string
@@ -49,34 +50,15 @@ function FloatingOrb({ className, style }: { className?: string; style?: React.C
 
 export default function CoursesView() {
   const { navigate, searchQuery, setSearchQuery, selectedCategory, setSelectedCategory } = useAppStore()
-  const [courses, setCourses] = useState<Course[]>([])
   const [selectedLevel, setSelectedLevel] = useState('الكل')
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    // Use static data directly - works on any hosting platform
-    try {
-      const { getCourses } = require('@/lib/static-data')
-      const data = getCourses(
-        selectedCategory !== 'الكل' ? selectedCategory : undefined,
-        searchQuery || undefined
-      )
-      setCourses(data)
-      setLoading(false)
-    } catch {
-      // Fallback to API
-      const params = new URLSearchParams()
-      if (selectedCategory !== 'الكل') params.set('category', selectedCategory)
-      if (searchQuery) params.set('search', searchQuery)
-      fetch(`/api/courses?${params.toString()}`)
-        .then(res => res.json())
-        .then(data => {
-          setCourses(Array.isArray(data) ? data : [])
-          setLoading(false)
-        })
-        .catch(() => { setCourses([]); setLoading(false) })
-    }
-  }, [selectedCategory, searchQuery])
+  const courses = useMemo(() =>
+    getCourses(
+      selectedCategory !== 'الكل' ? selectedCategory : undefined,
+      searchQuery || undefined
+    ) as unknown as Course[],
+    [selectedCategory, searchQuery]
+  )
 
   const filteredCourses = useMemo(() => {
     let filtered = courses
@@ -265,26 +247,9 @@ export default function CoursesView() {
           )}
         </div>
 
-        {/* Loading skeleton with shimmer */}
-        {loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="overflow-hidden rounded-2xl border border-gray-100 bg-white">
-                <ShimmerBlock className="aspect-video" />
-                <div className="p-5 space-y-3">
-                  <ShimmerBlock className="h-5 rounded-md w-1/3" />
-                  <ShimmerBlock className="h-6 rounded-md w-3/4" />
-                  <ShimmerBlock className="h-4 rounded-md w-1/2" />
-                  <ShimmerBlock className="h-4 rounded-md w-2/5" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
         {/* Empty state */}
         <AnimatePresence>
-          {!loading && filteredCourses.length === 0 && (
+          {filteredCourses.length === 0 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -306,7 +271,7 @@ export default function CoursesView() {
         </AnimatePresence>
 
         {/* Courses Grid */}
-        {!loading && filteredCourses.length > 0 && (
+        {filteredCourses.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCourses.map((course, i) => (
               <motion.div

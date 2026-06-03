@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress'
 import { ArrowRight, ArrowLeft, Play, Pause, Volume2, VolumeX, Maximize, FileQuestion, CheckCircle, Settings } from 'lucide-react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
+import { getCourseById } from '@/lib/static-data'
 
 interface CourseData {
   id: string
@@ -38,6 +39,7 @@ function getVideoId(courseCategory: string, lessonIndex: number): string {
 
 export default function LessonView() {
   const { selectedLessonId, selectedCourseId, navigate, studentEmail } = useAppStore()
+  const courseData = useMemo(() => getCourseById(selectedCourseId || '') as any, [selectedCourseId])
   const [course, setCourse] = useState<CourseData | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -48,38 +50,20 @@ export default function LessonView() {
   const [showVideo, setShowVideo] = useState(true)
   const [currentVideoId, setCurrentVideoId] = useState('')
 
+  useEffect(() => {
+    if (!selectedCourseId || !courseData) return
+    setCourse(courseData)
+    if (courseData.lessons) {
+      const idx = courseData.lessons.findIndex((l: { id: string }) => l.id === selectedLessonId)
+      setCurrentVideoId(getVideoId(courseData.category, idx >= 0 ? idx : 0))
+    }
+  }, [selectedCourseId, selectedLessonId, courseData])
+
   const currentLesson = course?.lessons.find(l => l.id === selectedLessonId)
   const lessonIndex = course?.lessons.findIndex(l => l.id === selectedLessonId) ?? -1
   const prevLesson = course?.lessons[lessonIndex - 1]
   const nextLesson = course?.lessons[lessonIndex + 1]
   const hasQuiz = course?.quizzes && course.quizzes.length > 0
-
-  useEffect(() => {
-    if (!selectedCourseId) return
-    // Use static data directly - works on any hosting platform
-    try {
-      const { getCourseById } = require('@/lib/static-data')
-      const data = getCourseById(selectedCourseId)
-      if (data) {
-        setCourse(data as any)
-        if (data.lessons) {
-          const idx = data.lessons.findIndex((l: { id: string }) => l.id === selectedLessonId)
-          setCurrentVideoId(getVideoId(data.category, idx >= 0 ? idx : 0))
-        }
-      }
-    } catch {
-      fetch(`/api/courses/${selectedCourseId}`)
-        .then(res => res.json())
-        .then(data => {
-          setCourse(data)
-          if (data.lessons) {
-            const idx = data.lessons.findIndex((l: { id: string }) => l.id === selectedLessonId)
-            setCurrentVideoId(getVideoId(data.category, idx >= 0 ? idx : 0))
-          }
-        })
-        .catch(() => {})
-    }
-  }, [selectedCourseId, selectedLessonId])
 
   useEffect(() => {
     if (!studentEmail || !selectedCourseId) return

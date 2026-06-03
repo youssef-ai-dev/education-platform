@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { GraduationCap, Users, BookOpen, Award, Star, ArrowLeft, Code, Palette, Briefcase, Globe, BarChart3, Play, Sparkles, CheckCircle, Quote, Zap, TrendingUp, Clock } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { getCourses } from '@/lib/static-data'
 
 interface Course {
   id: string
@@ -33,31 +34,7 @@ const levelConfig: Record<string, { label: string; color: string; bg: string }> 
 
 export default function HomeView() {
   const { navigate } = useAppStore()
-  const [courses, setCourses] = useState<Course[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
-
-  useEffect(() => {
-    // Use static data directly - works on any hosting platform
-    try {
-      const { getCourses } = require('@/lib/static-data')
-      const data = getCourses()
-      setCourses(data)
-      setLoading(false)
-    } catch {
-      // Fallback to API if static import fails
-      fetch('/api/courses')
-        .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data)) setCourses(data)
-          setLoading(false)
-        })
-        .catch(() => {
-          setError(true)
-          setLoading(false)
-        })
-    }
-  }, [])
+  const courses = useMemo(() => getCourses() as unknown as Course[], [])
 
   const categories = [
     { name: 'برمجة', icon: Code, gradient: 'from-emerald-400 to-teal-500', count: '20+ دورة', description: 'تطوير البرمجيات والتطبيقات' },
@@ -81,6 +58,9 @@ export default function HomeView() {
   ]
 
   const featuredCourses = courses.slice(0, 4)
+
+  const loading = false
+  const error = false
 
   return (
     <div className="min-h-screen">
@@ -326,7 +306,7 @@ export default function HomeView() {
               <Button
                 variant="outline"
                 className="border-emerald-300 text-emerald-700 hover:bg-emerald-50 rounded-xl px-6"
-                onClick={loadCourses}
+                onClick={() => window.location.reload()}
               >
                 إعادة المحاولة
               </Button>

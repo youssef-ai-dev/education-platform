@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label'
 import { Star, Users, Clock, Play, Lock, Unlock, CheckCircle, BookOpen, FileQuestion, ArrowLeft, ArrowRight, Monitor, Award, Download, Shield, Sparkles, GraduationCap } from 'lucide-react'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
+import { getCourseById } from '@/lib/static-data'
 
 interface Lesson {
   id: string
@@ -50,49 +51,23 @@ interface CourseDetail {
 
 export default function CourseDetailView() {
   const { selectedCourseId, navigate, studentEmail, studentName, setStudentInfo } = useAppStore()
-  const [course, setCourse] = useState<CourseDetail | null>(null)
-  const [loading, setLoading] = useState(true)
+  const course = useMemo(() => getCourseById(selectedCourseId || '') as unknown as CourseDetail | null, [selectedCourseId])
   const [enrollment, setEnrollment] = useState<{ id: string; progress: number } | null>(null)
   const [enrollOpen, setEnrollOpen] = useState(false)
   const [enrollName, setEnrollName] = useState(studentName)
   const [enrollEmail, setEnrollEmail] = useState(studentEmail)
   const [enrolling, setEnrolling] = useState(false)
   const [hoveredLesson, setHoveredLesson] = useState<string | null>(null)
+  const loading = false
 
   useEffect(() => {
-    if (!selectedCourseId) return
-    // Use static data directly - works on any hosting platform
-    try {
-      const { getCourseById } = require('@/lib/static-data')
-      const data = getCourseById(selectedCourseId)
-      if (data) {
-        setCourse(data as any)
-        if (studentEmail) {
-          const existing = data.enrollments?.find((e: { studentEmail: string }) => e.studentEmail === studentEmail)
-          if (existing) {
-            setEnrollment({ id: existing.id, progress: existing.progress })
-          }
-        }
+    if (course && studentEmail) {
+      const existing = course.enrollments?.find((e: { studentEmail: string }) => e.studentEmail === studentEmail)
+      if (existing) {
+        setEnrollment({ id: existing.id, progress: existing.progress })
       }
-      setLoading(false)
-    } catch {
-      // Fallback to API
-      fetch(`/api/courses/${selectedCourseId}`)
-        .then(res => {
-          if (!res.ok) throw new Error('Failed to fetch course')
-          return res.json()
-        })
-        .then(data => {
-          setCourse(data)
-          const existing = data.enrollments?.find((e: { studentEmail: string }) => e.studentEmail === studentEmail)
-          if (existing) {
-            setEnrollment({ id: existing.id, progress: existing.progress })
-          }
-          setLoading(false)
-        })
-        .catch(() => { setLoading(false) })
     }
-  }, [selectedCourseId, studentEmail])
+  }, [selectedCourseId, studentEmail, course])
 
   const handleEnroll = async () => {
     if (!enrollName.trim() || !enrollEmail.trim()) {

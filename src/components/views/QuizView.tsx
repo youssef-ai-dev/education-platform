@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { ArrowRight, ArrowLeft, Clock, AlertTriangle, CheckCircle2, Zap, BookOpen } from 'lucide-react'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
+import { getCourseById } from '@/lib/static-data'
 
 interface QuizQuestion {
   id: string
@@ -42,35 +43,16 @@ export default function QuizView() {
 
   useEffect(() => {
     if (!selectedCourseId) return
-    setLoading(true)
-    // Use static data directly - works on any hosting platform
-    try {
-      const { getCourseById } = require('@/lib/static-data')
-      const data = getCourseById(selectedCourseId)
-      if (data) {
-        const foundQuiz = data.quizzes?.find((q: { id: string }) => q.id === selectedQuizId)
-        if (foundQuiz) {
-          setQuiz(foundQuiz)
-          setAnswers(new Array(foundQuiz.questions.length).fill(-1))
-          setTimeLeft(foundQuiz.timeLimit * 60)
-        }
+    const data = getCourseById(selectedCourseId)
+    if (data) {
+      const foundQuiz = data.quizzes?.find((q: { id: string }) => q.id === selectedQuizId)
+      if (foundQuiz) {
+        setQuiz(foundQuiz)
+        setAnswers(new Array(foundQuiz.questions.length).fill(-1))
+        setTimeLeft(foundQuiz.timeLimit * 60)
       }
-      setLoading(false)
-    } catch {
-      // Fallback to API
-      fetch(`/api/courses/${selectedCourseId}`)
-        .then(res => res.json())
-        .then(data => {
-          const foundQuiz = data.quizzes?.find((q: { id: string }) => q.id === selectedQuizId)
-          if (foundQuiz) {
-            setQuiz(foundQuiz)
-            setAnswers(new Array(foundQuiz.questions.length).fill(-1))
-            setTimeLeft(foundQuiz.timeLimit * 60)
-          }
-          setLoading(false)
-        })
-        .catch(() => setLoading(false))
     }
+    setLoading(false)
   }, [selectedCourseId, selectedQuizId])
 
   // Timer
