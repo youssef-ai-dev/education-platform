@@ -29,3 +29,25 @@ Stage Summary:
 - Database seeded with 6 courses of rich Arabic content
 - Key fix: Seed API now checks for existing data before clearing
 - Key fix: Added null safety to CourseDetailView arrays
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: إزالة الوضع الداكن وتحسين الانتقالات السلسة بين الصفحات
+
+Work Log:
+- إزالة ThemeProvider من layout.tsx وإلغاء dark mode
+- إزالة زر تبديل الوضع الداكن (Sun/Moon) من Header (سطح المكتب والموبايل)
+- إزالة استيرادات useTheme و next-themes من Header
+- إعادة بناء PageTransition بالكامل مع AnimatePresence و framer-motion
+- إضافة انتقالات اتجاهية (directional transitions) تعتمد على اتجاه التنقل
+- إضافة شريط تحميل علوي (loading bar) يظهر أثناء الانتقال بين الصفحات
+- تحسين globals.css وإضافة أنيميشن content-fade-in و stagger-fade-in
+- تنظيف Footer و page.tsx من dark mode classes
+- البناء نجح بدون أخطاء
+- التحقق من أن API يعمل والبيانات تظهر
+
+Stage Summary:
+- تم إلغاء الوضع الداكن بالكامل (إزالة toggle، ThemeProvider)
+- تم تحسين الانتقالات بين الصفحات بشكل احترافي مع AnimatePresence
+- المشروع يعمل بنجاح على localhost:3000

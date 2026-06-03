@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -16,7 +16,7 @@ import PageTransition from '@/components/PageTransition'
 import { GraduationCap } from 'lucide-react'
 
 function ViewRenderer() {
-  const { currentView, selectedCourseId, selectedLessonId, selectedQuizId, certificateId } = useAppStore()
+  const { currentView } = useAppStore()
 
   const viewMap: Record<string, React.ReactNode> = {
     'home': <HomeView />,
@@ -52,14 +52,14 @@ export default function HomePage() {
 
   if (!seeded) {
     return (
-      <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col bg-white">
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse">
-              <GraduationCap className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+            <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse">
+              <GraduationCap className="w-8 h-8 text-emerald-600" />
             </div>
-            <p className="text-gray-500 dark:text-gray-400 font-medium">جاري تحميل المنصة...</p>
+            <p className="text-gray-500 font-medium">جاري تحميل المنصة...</p>
           </div>
         </main>
         <Footer />
@@ -68,7 +68,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
       <main className="flex-1">
         <ViewRenderer />

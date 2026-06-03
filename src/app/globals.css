@@ -78,40 +78,6 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-.dark {
-  --background: oklch(0.13 0.005 155);
-  --foreground: oklch(0.96 0.01 155);
-  --card: oklch(0.18 0.008 155);
-  --card-foreground: oklch(0.96 0.01 155);
-  --popover: oklch(0.18 0.008 155);
-  --popover-foreground: oklch(0.96 0.01 155);
-  --primary: oklch(0.75 0.15 160);
-  --primary-foreground: oklch(0.13 0.005 155);
-  --secondary: oklch(0.22 0.01 155);
-  --secondary-foreground: oklch(0.96 0.01 155);
-  --muted: oklch(0.22 0.01 155);
-  --muted-foreground: oklch(0.65 0.02 155);
-  --accent: oklch(0.22 0.01 155);
-  --accent-foreground: oklch(0.96 0.01 155);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.55 0.1 160);
-  --chart-1: oklch(0.65 0.18 160);
-  --chart-2: oklch(0.6 0.12 180);
-  --chart-3: oklch(0.5 0.08 200);
-  --chart-4: oklch(0.75 0.15 140);
-  --chart-5: oklch(0.7 0.2 80);
-  --sidebar: oklch(0.16 0.008 155);
-  --sidebar-foreground: oklch(0.96 0.01 155);
-  --sidebar-primary: oklch(0.65 0.15 160);
-  --sidebar-primary-foreground: oklch(0.96 0.01 155);
-  --sidebar-accent: oklch(0.22 0.01 155);
-  --sidebar-accent-foreground: oklch(0.96 0.01 155);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.55 0.1 160);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -121,13 +87,9 @@
   }
 }
 
-/* Smooth theme transition */
+/* Smooth scroll */
 html {
-  transition: color-scheme 0.3s ease;
-}
-
-html.dark {
-  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 /* Page transition animation */
@@ -146,7 +108,35 @@ html.dark {
   animation: page-enter 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
+/* Smooth content fade-in for view changes */
+@keyframes content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.content-animate {
+  animation: content-fade-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Staggered children animation */
+@keyframes stagger-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.stagger-item {
+  animation: stagger-fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-fill-mode: backwards;
 }
