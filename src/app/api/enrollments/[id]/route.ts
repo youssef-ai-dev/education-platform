@@ -1,5 +1,5 @@
-import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
+import { updateEnrollmentProgress } from '@/lib/static-data'
 
 export async function PATCH(
   request: NextRequest,
@@ -14,13 +14,11 @@ export async function PATCH(
       return NextResponse.json({ error: 'نسبة التقدم مطلوبة' }, { status: 400 })
     }
 
-    const enrollment = await db.enrollment.update({
-      where: { id },
-      data: {
-        progress,
-        completedAt: progress >= 100 ? new Date() : undefined
-      }
-    })
+    const enrollment = updateEnrollmentProgress(id, progress)
+
+    if (!enrollment) {
+      return NextResponse.json({ error: 'التسجيل غير موجود' }, { status: 404 })
+    }
 
     return NextResponse.json(enrollment)
   } catch (error) {

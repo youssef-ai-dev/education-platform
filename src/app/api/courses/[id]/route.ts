@@ -1,5 +1,5 @@
-import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
+import { getCourseById } from '@/lib/static-data'
 
 export async function GET(
   request: NextRequest,
@@ -7,19 +7,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params
-    const course = await db.course.findUnique({
-      where: { id },
-      include: {
-        lessons: { orderBy: { order: 'asc' } },
-        quizzes: {
-          include: {
-            questions: true,
-            attempts: true
-          }
-        },
-        enrollments: true
-      }
-    })
+    const course = getCourseById(id)
 
     if (!course) {
       return NextResponse.json({ error: 'الدورة غير موجودة' }, { status: 404 })

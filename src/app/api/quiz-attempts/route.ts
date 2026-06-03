@@ -1,5 +1,5 @@
-import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
+import { createQuizAttempt } from '@/lib/static-data'
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,17 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'جميع الحقول مطلوبة' }, { status: 400 })
     }
 
-    const attempt = await db.quizAttempt.create({
-      data: {
-        enrollmentId,
-        quizId,
-        score,
-        passed,
-        answers: JSON.stringify(answers),
-      },
-      include: { quiz: true }
-    })
-
+    const attempt = createQuizAttempt({ enrollmentId, quizId, answers, score, passed })
     return NextResponse.json(attempt, { status: 201 })
   } catch (error) {
     console.error('Quiz attempt POST error:', error)

@@ -69,4 +69,5 @@ Thumbs.db
 # Agent context
 /agent-ctx/
 worklog*.md
-worklog*.txt
+worklog*.txt.netlify/
+education-platform/

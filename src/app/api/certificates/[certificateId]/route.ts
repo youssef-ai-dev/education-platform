@@ -1,5 +1,5 @@
-import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
+import { getCertificateByCertificateId } from '@/lib/static-data'
 
 export async function GET(
   request: NextRequest,
@@ -7,9 +7,7 @@ export async function GET(
 ) {
   try {
     const { certificateId } = await params
-    const certificate = await db.certificate.findUnique({
-      where: { certificateId }
-    })
+    const certificate = getCertificateByCertificateId(certificateId)
 
     if (!certificate) {
       return NextResponse.json({ error: 'الشهادة غير موجودة' }, { status: 404 })
