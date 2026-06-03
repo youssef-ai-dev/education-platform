@@ -5,7 +5,7 @@ import { useAppStore } from '@/store/useAppStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { GraduationCap, Users, BookOpen, Award, Star, ArrowLeft, Code, Palette, Briefcase, Globe, BarChart3 } from 'lucide-react'
+import { GraduationCap, Users, BookOpen, Award, Star, ArrowLeft, Code, Palette, Briefcase, Globe, BarChart3, Play, Sparkles, CheckCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 interface Course {
@@ -58,65 +58,151 @@ export default function HomeView() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-bl from-emerald-600 via-emerald-700 to-teal-700 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djZoLTZWMzRoNnptMC0zMHY2aC02VjRoNnptMCAxMHY2aC02VjE0aDZ6bTAgMTB2NmgtNlYyNGg2ek02IDM0djZIMHYtNmg2em0wLTMwdjZIMHYtNmg2em0wIDEwdjZIMHYtNmg2em0wIDEwdjZIMHYtMjRoNnptMTAtMHY2aC02VjI0aDZ6bTAtMTB2NmgtNlYxNGg2em0wLTEwdjZoLTZWNmg2em0wMzB2NmgtNlYzNGg2em0wLTEwdjZoLTZWMjRoNnptMC0xMHY2aC02VjE0aDZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-3xl mx-auto"
-          >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              تعلّم بلا حدود
-            </h1>
-            <p className="text-lg md:text-xl text-emerald-100 mb-8 leading-relaxed">
-              اكتشف عالماً من المعرفة مع أفضل المدربين العرب. دورات تفاعلية، شهادات معتمدة، وتعلم ذاتي المعدل يناسب وقتك.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-white text-emerald-700 hover:bg-emerald-50 text-lg px-8 py-6 rounded-xl font-semibold"
-                onClick={() => navigate('courses')}
+      {/* Hero Section - Redesigned */}
+      <section className="relative overflow-hidden bg-gradient-to-bl from-emerald-600 via-emerald-700 to-teal-800 text-white">
+        {/* Decorative blobs */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-teal-400/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-emerald-400/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="flex flex-col lg:flex-row items-center gap-12 py-16 md:py-24">
+            {/* Text Content */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7 }}
+              className="flex-1 text-center lg:text-right"
+            >
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm px-4 py-2 rounded-full mb-6 text-sm font-medium"
               >
-                استكشف الدورات
-                <ArrowLeft className="w-5 h-5 mr-2" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white/10 text-lg px-8 py-6 rounded-xl"
-                onClick={() => navigate('dashboard')}
-              >
-                لوحة التحكم
-              </Button>
-            </div>
-          </motion.div>
+                <Sparkles className="w-4 h-4 text-amber-300" />
+                منصة تعليمية عربية رائدة
+              </motion.div>
+
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+                تعلّم بلا حدود
+                <br />
+                <span className="text-emerald-200">مع أفضل المدربين</span>
+              </h1>
+
+              <p className="text-lg md:text-xl text-emerald-100 mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                اكتشف عالماً من المعرفة مع أفضل المدربين العرب. دورات تفاعلية، شهادات معتمدة، وتعلم ذاتي المعدل يناسب وقتك.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+                <Button
+                  size="lg"
+                  className="bg-white text-emerald-700 hover:bg-emerald-50 text-lg px-8 py-6 rounded-xl font-bold shadow-lg shadow-emerald-900/30 hover:shadow-xl hover:shadow-emerald-900/40 transition-all"
+                  onClick={() => navigate('courses')}
+                >
+                  استكشف الدورات
+                  <ArrowLeft className="w-5 h-5 mr-2" />
+                </Button>
+                <Button
+                  size="lg"
+                  className="bg-emerald-500/30 text-white hover:bg-emerald-500/50 backdrop-blur-sm border border-white/20 text-lg px-8 py-6 rounded-xl font-semibold transition-all"
+                  onClick={() => navigate('dashboard')}
+                >
+                  <Play className="w-5 h-5 ml-2" />
+                  جرّبه مجاناً
+                </Button>
+              </div>
+
+              {/* Trust indicators */}
+              <div className="flex flex-wrap gap-4 justify-center lg:justify-start text-sm text-emerald-200">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle className="w-4 h-4 text-emerald-300" />
+                  شهادات معتمدة
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle className="w-4 h-4 text-emerald-300" />
+                  +50 دورة تعليمية
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle className="w-4 h-4 text-emerald-300" />
+                  دعم متواصل
+                </span>
+              </div>
+            </motion.div>
+
+            {/* Hero Illustration */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="flex-1 max-w-lg w-full"
+            >
+              <div className="relative">
+                {/* Main illustration */}
+                <div className="rounded-2xl overflow-hidden shadow-2xl shadow-emerald-900/40 border border-white/10">
+                  <img
+                    src="/hero-illustration.png"
+                    alt="منصة علم - تعلّم بلا حدود"
+                    className="w-full h-auto"
+                  />
+                </div>
+                {/* Floating badge 1 */}
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-4 -right-4 bg-white rounded-xl px-4 py-3 shadow-lg flex items-center gap-2"
+                >
+                  <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
+                    <Award className="w-4 h-4 text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">شهادة</p>
+                    <p className="text-sm font-bold text-gray-900">معتمدة</p>
+                  </div>
+                </motion.div>
+                {/* Floating badge 2 */}
+                <motion.div
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -bottom-4 -left-4 bg-white rounded-xl px-4 py-3 shadow-lg flex items-center gap-2"
+                >
+                  <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <Users className="w-4 h-4 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">طلاب نشطون</p>
+                    <p className="text-sm font-bold text-gray-900">500+</p>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Stats Bar */}
-      <section className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1, duration: 0.4 }}
-                className="text-center"
-              >
-                <div className="flex justify-center mb-2">
-                  <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center">
-                    <stat.icon className="w-6 h-6 text-emerald-600" />
+      {/* Stats Bar - Integrated into hero style */}
+      <section className="relative -mt-1 bg-gradient-to-b from-teal-800 to-gray-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 -mt-12 relative z-10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+              {stats.map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 + 0.5, duration: 0.4 }}
+                  className="text-center"
+                >
+                  <div className="flex justify-center mb-3">
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center">
+                      <stat.icon className="w-7 h-7 text-emerald-600" />
+                    </div>
                   </div>
-                </div>
-                <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
-                <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
-              </motion.div>
-            ))}
+                  <div className="text-3xl font-extrabold text-gray-900">{stat.value}</div>
+                  <div className="text-sm text-gray-500 mt-1 font-medium">{stat.label}</div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
