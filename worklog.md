@@ -1,53 +1,27 @@
-# Project Worklog
-
 ---
 Task ID: 1
 Agent: Main Agent
-Task: Build Arabic Online Learning Platform (منصة تعليمية)
+Task: Fix courses not loading on Netlify deployment
 
 Work Log:
-- Initialized fullstack project environment with Next.js 16, TypeScript, Tailwind CSS 4, shadcn/ui, Prisma
-- Designed and implemented Prisma schema with Course, Lesson, Quiz, QuizQuestion, Enrollment, QuizAttempt, Certificate models
-- Created seed API with 6 Arabic courses across 5 categories (برمجة, تصميم, أعمال, لغات, علوم بيانات)
-- Each course has 4-6 lessons with Arabic content and 1 quiz with 4-5 questions
-- Built 8 view components managed by Zustand client-side state: Home, Courses, CourseDetail, Lesson, Quiz, QuizResult, Dashboard, Certificate
-- Created API routes for courses, enrollments, quiz-attempts, certificates, and seeding
-- Implemented RTL Arabic layout with emerald/green theme
-- Fixed CourseDetailView null safety issues (course.lessons?.length, course.quizzes?.map)
-- Fixed seed API to not clear data on every call (check existing courses first)
-- Generated course thumbnail images using z-ai-generate CLI
-- Tested all major flows via agent-browser: Home, Courses, Course Detail, Enrollment, Lesson, Dashboard
-- All lint checks pass with no errors
+- Diagnosed the root cause: `output: "standalone"` in next.config.ts conflicted with @netlify/plugin-nextjs, causing API routes to return 500 errors
+- Found that `require('@/lib/static-data')` in client components doesn't work reliably in production builds
+- Found `loadCourses` undefined reference bug in HomeView.tsx
+- Fixed next.config.ts: removed `output: "standalone"`
+- Fixed netlify.toml: updated build command to `npm run build`
+- Fixed package.json: removed standalone copy commands from build script
+- Fixed HomeView.tsx: replaced require() with direct ES import from static-data.ts, fixed loadCourses bug
+- Fixed CoursesView.tsx: replaced require() with direct ES import
+- Fixed CourseDetailView.tsx: replaced require() with direct ES import
+- Fixed LessonView.tsx: replaced require() with direct ES import
+- Fixed QuizView.tsx: replaced require() with direct ES import
+- Built project successfully locally
+- Pushed to GitHub (commit c2a47e3)
+- Verified API endpoint returns 200 with all 6 courses on Netlify
+- Verified main page loads correctly
 
 Stage Summary:
-- Platform "علم" is fully functional with Arabic RTL UI
-- All 8 views render correctly
-- Enrollment flow works (name + email dialog, success toast, button changes to "ابدأ التعلم")
-- Dashboard shows enrolled courses with progress tracking
-- Quiz system with timer, question navigation, and auto-submit is implemented
-- Certificate system with professional design and print support is implemented
-- Database seeded with 6 courses of rich Arabic content
-- Key fix: Seed API now checks for existing data before clearing
-- Key fix: Added null safety to CourseDetailView arrays
-
----
-Task ID: 2
-Agent: Main Agent
-Task: إزالة الوضع الداكن وتحسين الانتقالات السلسة بين الصفحات
-
-Work Log:
-- إزالة ThemeProvider من layout.tsx وإلغاء dark mode
-- إزالة زر تبديل الوضع الداكن (Sun/Moon) من Header (سطح المكتب والموبايل)
-- إزالة استيرادات useTheme و next-themes من Header
-- إعادة بناء PageTransition بالكامل مع AnimatePresence و framer-motion
-- إضافة انتقالات اتجاهية (directional transitions) تعتمد على اتجاه التنقل
-- إضافة شريط تحميل علوي (loading bar) يظهر أثناء الانتقال بين الصفحات
-- تحسين globals.css وإضافة أنيميشن content-fade-in و stagger-fade-in
-- تنظيف Footer و page.tsx من dark mode classes
-- البناء نجح بدون أخطاء
-- التحقق من أن API يعمل والبيانات تظهر
-
-Stage Summary:
-- تم إلغاء الوضع الداكن بالكامل (إزالة toggle، ThemeProvider)
-- تم تحسين الانتقالات بين الصفحات بشكل احترافي مع AnimatePresence
-- المشروع يعمل بنجاح على localhost:3000
+- Courses now load instantly from bundled static data (no API dependency for read operations)
+- API routes work correctly on Netlify (verified /api/courses returns 200)
+- All client components use proper ES imports instead of require()
+- Netlify deployment at https://gentle-starburst-b296c4.netlify.app/ should now show courses correctly
