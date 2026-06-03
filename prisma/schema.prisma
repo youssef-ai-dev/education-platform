@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Course {
+  id           String    @id @default(cuid())
+  title        String
+  description  String
+  category     String
+  thumbnailUrl String?
+  instructor   String
+  duration     String
+  rating       Float     @default(0)
+  studentsCount Int     @default(0)
+  price        Float     @default(0)
+  level        String    @default("مبتدئ")
+  createdAt    DateTime  @default(now())
+
+  lessons      Lesson[]
+  quizzes      Quiz[]
+  enrollments  Enrollment[]
+}
+
+model Lesson {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  videoUrl    String  @default("")
+  duration    String  @default("0 دقيقة")
+  order       Int     @default(0)
+  courseId    String
+  isFree      Boolean @default(false)
+
+  course      Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  quiz        Quiz?
+}
+
+model Quiz {
+  id           String  @id @default(cuid())
+  title        String
+  courseId     String
+  lessonId     String?  @unique
+  timeLimit    Int     @default(15)
+  passingScore Int     @default(60)
+
+  course       Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lesson       Lesson?        @relation(fields: [lessonId], references: [id], onDelete: SetNull)
+  questions    QuizQuestion[]
+  attempts     QuizAttempt[]
+}
+
+model QuizQuestion {
+  id            String  @id @default(cuid())
+  quizId        String
+  question      String
+  options       String
+  correctAnswer Int     @default(0)
+  explanation   String  @default("")
+
+  quiz          Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model Enrollment {
+  id          String    @id @default(cuid())
+  studentName String
+  studentEmail String
+  courseId    String
+  progress    Float     @default(0)
+  enrolledAt  DateTime  @default(now())
+  completedAt DateTime?
+
+  course       Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  quizAttempts QuizAttempt[]
+  certificate  Certificate?
+}
+
+model QuizAttempt {
+  id           String   @id @default(cuid())
+  enrollmentId String
+  quizId       String
+  score        Int      @default(0)
+  passed       Boolean  @default(false)
+  answers      String   @default("[]")
+  completedAt  DateTime @default(now())
+
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  quiz         Quiz       @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model Certificate {
+  id            String   @id @default(cuid())
+  enrollmentId  String   @unique
+  studentName   String
+  courseTitle   String
+  instructor    String
+  completedAt   DateTime @default(now())
+  certificateId String   @unique
+
+  enrollment    Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+}
