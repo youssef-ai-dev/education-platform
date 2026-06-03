@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -36,34 +36,28 @@ export default function HomeView() {
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
-  const fetchAttempted = useRef(false)
-
-  const loadCourses = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError(false)
-      const res = await fetch('/api/courses')
-      if (!res.ok) throw new Error('Failed to fetch')
-      const data = await res.json()
-      if (Array.isArray(data)) {
-        setCourses(data)
-      } else {
-        setCourses([])
-      }
-      setLoading(false)
-    } catch {
-      setCourses([])
-      setError(true)
-      setLoading(false)
-    }
-  }, [])
 
   useEffect(() => {
-    if (!fetchAttempted.current) {
-      fetchAttempted.current = true
-      loadCourses()
+    // Use static data directly - works on any hosting platform
+    try {
+      const { getCourses } = require('@/lib/static-data')
+      const data = getCourses()
+      setCourses(data)
+      setLoading(false)
+    } catch {
+      // Fallback to API if static import fails
+      fetch('/api/courses')
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) setCourses(data)
+          setLoading(false)
+        })
+        .catch(() => {
+          setError(true)
+          setLoading(false)
+        })
     }
-  }, [loadCourses])
+  }, [])
 
   const categories = [
     { name: 'برمجة', icon: Code, gradient: 'from-emerald-400 to-teal-500', count: '20+ دورة', description: 'تطوير البرمجيات والتطبيقات' },

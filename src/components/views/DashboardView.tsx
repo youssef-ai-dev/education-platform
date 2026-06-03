@@ -68,25 +68,21 @@ export default function DashboardView() {
 
   useEffect(() => {
     if (studentEmail) {
-      let cancelled = false
-      Promise.all([
-        fetch(`/api/enrollments?email=${encodeURIComponent(studentEmail)}`),
-        fetch(`/api/certificates?email=${encodeURIComponent(studentEmail)}`)
-      ]).then(([enrollRes, certRes]) => {
-        return Promise.all([enrollRes.json(), certRes.json()])
-      }).then(([enrollData, certData]) => {
-        if (cancelled) return
-        setEnrollments(Array.isArray(enrollData) ? enrollData : [])
-        setCertificates(Array.isArray(certData) ? certData : [])
-        setLoading(false)
-      }).catch(() => {
-        if (!cancelled) {
-          setEnrollments([])
-          setCertificates([])
-          setLoading(false)
-        }
-      })
-      return () => { cancelled = true }
+      // Use static data directly for courses - API is optional for enrollments/certificates
+      setLoading(false)
+      // Try API first for enrollments/certificates (user-specific data)
+      try {
+        Promise.all([
+          fetch(`/api/enrollments?email=${encodeURIComponent(studentEmail)}`).then(r => r.json()).catch(() => []),
+          fetch(`/api/certificates?email=${encodeURIComponent(studentEmail)}`).then(r => r.json()).catch(() => [])
+        ]).then(([enrollData, certData]) => {
+          setEnrollments(Array.isArray(enrollData) ? enrollData : [])
+          setCertificates(Array.isArray(certData) ? certData : [])
+        })
+      } catch {
+        setEnrollments([])
+        setCertificates([])
+      }
     }
   }, [studentEmail])
 

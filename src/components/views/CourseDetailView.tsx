@@ -61,23 +61,37 @@ export default function CourseDetailView() {
 
   useEffect(() => {
     if (!selectedCourseId) return
-    let cancelled = false
-    fetch(`/api/courses/${selectedCourseId}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch course')
-        return res.json()
-      })
-      .then(data => {
-        if (cancelled) return
-        setCourse(data)
-        const existing = data.enrollments?.find((e: { studentEmail: string }) => e.studentEmail === studentEmail)
-        if (existing) {
-          setEnrollment({ id: existing.id, progress: existing.progress })
+    // Use static data directly - works on any hosting platform
+    try {
+      const { getCourseById } = require('@/lib/static-data')
+      const data = getCourseById(selectedCourseId)
+      if (data) {
+        setCourse(data as any)
+        if (studentEmail) {
+          const existing = data.enrollments?.find((e: { studentEmail: string }) => e.studentEmail === studentEmail)
+          if (existing) {
+            setEnrollment({ id: existing.id, progress: existing.progress })
+          }
         }
-        setLoading(false)
-      })
-      .catch(() => { if (!cancelled) setLoading(false) })
-    return () => { cancelled = true }
+      }
+      setLoading(false)
+    } catch {
+      // Fallback to API
+      fetch(`/api/courses/${selectedCourseId}`)
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to fetch course')
+          return res.json()
+        })
+        .then(data => {
+          setCourse(data)
+          const existing = data.enrollments?.find((e: { studentEmail: string }) => e.studentEmail === studentEmail)
+          if (existing) {
+            setEnrollment({ id: existing.id, progress: existing.progress })
+          }
+          setLoading(false)
+        })
+        .catch(() => { setLoading(false) })
+    }
   }, [selectedCourseId, studentEmail])
 
   const handleEnroll = async () => {

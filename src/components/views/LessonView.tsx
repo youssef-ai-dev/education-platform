@@ -56,16 +56,29 @@ export default function LessonView() {
 
   useEffect(() => {
     if (!selectedCourseId) return
-    fetch(`/api/courses/${selectedCourseId}`)
-      .then(res => res.json())
-      .then(data => {
-        setCourse(data)
+    // Use static data directly - works on any hosting platform
+    try {
+      const { getCourseById } = require('@/lib/static-data')
+      const data = getCourseById(selectedCourseId)
+      if (data) {
+        setCourse(data as any)
         if (data.lessons) {
           const idx = data.lessons.findIndex((l: { id: string }) => l.id === selectedLessonId)
           setCurrentVideoId(getVideoId(data.category, idx >= 0 ? idx : 0))
         }
-      })
-      .catch(() => {})
+      }
+    } catch {
+      fetch(`/api/courses/${selectedCourseId}`)
+        .then(res => res.json())
+        .then(data => {
+          setCourse(data)
+          if (data.lessons) {
+            const idx = data.lessons.findIndex((l: { id: string }) => l.id === selectedLessonId)
+            setCurrentVideoId(getVideoId(data.category, idx >= 0 ? idx : 0))
+          }
+        })
+        .catch(() => {})
+    }
   }, [selectedCourseId, selectedLessonId])
 
   useEffect(() => {

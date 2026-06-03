@@ -54,18 +54,28 @@ export default function CoursesView() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const params = new URLSearchParams()
-    if (selectedCategory !== 'الكل') params.set('category', selectedCategory)
-    if (searchQuery) params.set('search', searchQuery)
-
-    setLoading(true)
-    fetch(`/api/courses?${params.toString()}`)
-      .then(res => res.json())
-      .then(data => {
-        setCourses(Array.isArray(data) ? data : [])
-        setLoading(false)
-      })
-      .catch(() => { setCourses([]); setLoading(false) })
+    // Use static data directly - works on any hosting platform
+    try {
+      const { getCourses } = require('@/lib/static-data')
+      const data = getCourses(
+        selectedCategory !== 'الكل' ? selectedCategory : undefined,
+        searchQuery || undefined
+      )
+      setCourses(data)
+      setLoading(false)
+    } catch {
+      // Fallback to API
+      const params = new URLSearchParams()
+      if (selectedCategory !== 'الكل') params.set('category', selectedCategory)
+      if (searchQuery) params.set('search', searchQuery)
+      fetch(`/api/courses?${params.toString()}`)
+        .then(res => res.json())
+        .then(data => {
+          setCourses(Array.isArray(data) ? data : [])
+          setLoading(false)
+        })
+        .catch(() => { setCourses([]); setLoading(false) })
+    }
   }, [selectedCategory, searchQuery])
 
   const filteredCourses = useMemo(() => {

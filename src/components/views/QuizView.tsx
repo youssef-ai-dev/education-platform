@@ -43,18 +43,34 @@ export default function QuizView() {
   useEffect(() => {
     if (!selectedCourseId) return
     setLoading(true)
-    fetch(`/api/courses/${selectedCourseId}`)
-      .then(res => res.json())
-      .then(data => {
+    // Use static data directly - works on any hosting platform
+    try {
+      const { getCourseById } = require('@/lib/static-data')
+      const data = getCourseById(selectedCourseId)
+      if (data) {
         const foundQuiz = data.quizzes?.find((q: { id: string }) => q.id === selectedQuizId)
         if (foundQuiz) {
           setQuiz(foundQuiz)
           setAnswers(new Array(foundQuiz.questions.length).fill(-1))
           setTimeLeft(foundQuiz.timeLimit * 60)
         }
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
+      }
+      setLoading(false)
+    } catch {
+      // Fallback to API
+      fetch(`/api/courses/${selectedCourseId}`)
+        .then(res => res.json())
+        .then(data => {
+          const foundQuiz = data.quizzes?.find((q: { id: string }) => q.id === selectedQuizId)
+          if (foundQuiz) {
+            setQuiz(foundQuiz)
+            setAnswers(new Array(foundQuiz.questions.length).fill(-1))
+            setTimeLeft(foundQuiz.timeLimit * 60)
+          }
+          setLoading(false)
+        })
+        .catch(() => setLoading(false))
+    }
   }, [selectedCourseId, selectedQuizId])
 
   // Timer
