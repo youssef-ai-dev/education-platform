@@ -1,7 +1,8 @@
 {
-  "name": "nextjs_tailwind_shadcn_ts",
-  "version": "0.2.0",
+  "name": "3ilm-education-platform",
+  "version": "1.0.0",
   "private": true,
+  "description": "منصة تعليمية إلكترونية متكاملة باللغة العربية - دورات فيديو، اختبارات تفاعلية، وشهادات معتمدة",
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
