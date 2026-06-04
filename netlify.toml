@@ -4,10 +4,8 @@
 
 [build.environment]
   DATABASE_URL = "file:./dev.db"
-  # Clerk keys - Set these in Netlify Dashboard > Site settings > Environment variables
-  # DO NOT put real secret keys here - they will be committed to Git!
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_bGVnYWwtbWlkZ2UtNC5jbGVyay5hY2NvdW50cy5kZXYk"
-  CLERK_SECRET_KEY = "must-be-set-in-netlify-dashboard"
+  CLERK_SECRET_KEY = "sk_test_cFJum7MSa9ndF4J9oNJ8M3gWzm5cYtY4nTb1fEm7ly"
   NEXT_PUBLIC_CLERK_SIGN_IN_URL = "/signin"
   NEXT_PUBLIC_CLERK_SIGN_UP_URL = "/signup"
   NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL = "/"
