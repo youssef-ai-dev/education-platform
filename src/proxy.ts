@@ -1,16 +1,17 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
 
 /**
  * Route matcher for API routes that require authentication.
  * Public routes (like courses listing and health check) are excluded.
  *
- * This middleware provides a defense-in-depth layer:
+ * This proxy provides a defense-in-depth layer:
  * - Even if a route handler forgets to call withAuthRateLimit(),
- *   the middleware will block unauthenticated access.
+ *   the proxy will block unauthenticated access.
  * - Route handlers still do their own auth for ownership checks and
- *   to get the userId — middleware just ensures a session exists.
+ *   to get the userId — proxy just ensures a session exists.
+ *
+ * Note: In Next.js 16+, the "proxy" file convention replaces "middleware".
  */
 const isProtectedApiRoute = createRouteMatcher([
   '/api/enrollments(.*)',

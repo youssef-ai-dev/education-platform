@@ -57,7 +57,7 @@ describe('Middleware - API Route Protection', () => {
       mockAuth.mockResolvedValue({ userId: null })
 
       // Import middleware after mocks are set up
-      const middlewareModule = await import('@/middleware')
+      const middlewareModule = await import('@/proxy')
       const middleware = middlewareModule.default
 
       const request = {
@@ -71,7 +71,7 @@ describe('Middleware - API Route Protection', () => {
     it('should block unauthenticated access to /api/quiz-attempts', async () => {
       mockAuth.mockResolvedValue({ userId: null })
 
-      const middlewareModule = await import('@/middleware')
+      const middlewareModule = await import('@/proxy')
       const middleware = middlewareModule.default
 
       const request = {
@@ -85,7 +85,7 @@ describe('Middleware - API Route Protection', () => {
     it('should block unauthenticated access to /api/generate-certificate', async () => {
       mockAuth.mockResolvedValue({ userId: null })
 
-      const middlewareModule = await import('@/middleware')
+      const middlewareModule = await import('@/proxy')
       const middleware = middlewareModule.default
 
       const request = {
@@ -99,7 +99,7 @@ describe('Middleware - API Route Protection', () => {
     it('should block unauthenticated access to /api/certificates', async () => {
       mockAuth.mockResolvedValue({ userId: null })
 
-      const middlewareModule = await import('@/middleware')
+      const middlewareModule = await import('@/proxy')
       const middleware = middlewareModule.default
 
       const request = {
@@ -113,7 +113,7 @@ describe('Middleware - API Route Protection', () => {
     it('should allow authenticated access to protected routes', async () => {
       mockAuth.mockResolvedValue({ userId: 'user-123' })
 
-      const middlewareModule = await import('@/middleware')
+      const middlewareModule = await import('@/proxy')
       const middleware = middlewareModule.default
 
       const request = {
@@ -130,7 +130,7 @@ describe('Middleware - API Route Protection', () => {
     it('should allow unauthenticated access to /api/courses', async () => {
       mockAuth.mockResolvedValue({ userId: null })
 
-      const middlewareModule = await import('@/middleware')
+      const middlewareModule = await import('@/proxy')
       const middleware = middlewareModule.default
 
       const request = {
@@ -145,7 +145,7 @@ describe('Middleware - API Route Protection', () => {
     it('should allow unauthenticated access to /api/courses/[id]', async () => {
       mockAuth.mockResolvedValue({ userId: null })
 
-      const middlewareModule = await import('@/middleware')
+      const middlewareModule = await import('@/proxy')
       const middleware = middlewareModule.default
 
       const request = {
@@ -159,7 +159,7 @@ describe('Middleware - API Route Protection', () => {
     it('should allow access to /api health check', async () => {
       mockAuth.mockResolvedValue({ userId: null })
 
-      const middlewareModule = await import('@/middleware')
+      const middlewareModule = await import('@/proxy')
       const middleware = middlewareModule.default
 
       const request = {
@@ -177,7 +177,7 @@ describe('Middleware - API Route Protection', () => {
       process.env.NODE_ENV = 'development'
       mockAuth.mockResolvedValue({ userId: null })
 
-      const middlewareModule = await import('@/middleware')
+      const middlewareModule = await import('@/proxy')
       const middleware = middlewareModule.default
 
       const request = {
@@ -220,7 +220,7 @@ describe('Middleware - API Route Protection', () => {
         },
       }))
 
-      const middlewareModule = await import('@/middleware')
+      const middlewareModule = await import('@/proxy')
       const middleware = middlewareModule.default
 
       const request = {

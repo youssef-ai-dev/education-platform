@@ -109,10 +109,10 @@ async function checkRateLimitKV(
 ): Promise<RateLimitResult> {
   try {
     // Dynamic import — only loads KV if available at runtime
-    // Using a variable path so Vite doesn't try to resolve the module during tests/build
-    const kvModuleName = '@vercel/kv'
-    const kvModule = await import(/* @vite-ignore */ kvModuleName)
-    const { kv } = kvModule
+    // Using Function constructor to prevent Vite/Turbopack from analyzing the import
+    // This is the standard pattern for optional dependencies in Vite environments
+    const dynamicImport = new Function('module', 'return import(module)')
+    const { kv } = await dynamicImport('@vercel/kv')
 
     const key = `ratelimit:${identifier}:${route}`
     const windowMs = options.windowSeconds * 1000

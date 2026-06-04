@@ -5,22 +5,9 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
-
-  // Sentry source maps upload configuration
-  // When NEXT_PUBLIC_SENTRY_DSN is set, Sentry will be enabled
-  // and source maps will be uploaded during build
-  sentry: {
-    // Use the hidden source map setting to prevent exposing source maps in production
-    // while still allowing Sentry to un-minify stack traces
-    hideSourceMaps: true,
-    // Disable the automatic instrumentation of the middleware
-    // since we have our own custom middleware
-    disableServerWebpackPlugin: process.env.NEXT_PUBLIC_SENTRY_DSN ? false : true,
-    disableClientWebpackPlugin: process.env.NEXT_PUBLIC_SENTRY_DSN ? false : true,
-  },
 };
 
-// Wrap with Sentry config if DSN is available
+// Wrap with Sentry config if DSN is available and Sentry package is installed
 const withSentryConfig = async () => {
   if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
     try {
