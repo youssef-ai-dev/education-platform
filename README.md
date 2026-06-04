@@ -6,6 +6,7 @@
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Clerk](https://img.shields.io/badge/Clerk-Auth-6C47FF?style=for-the-badge&logo=clerk&logoColor=white)](https://clerk.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](./LICENSE)
@@ -47,6 +48,13 @@
 
 ## ✨ المميزات
 
+### 🔐 نظام مصادقة متكامل (Clerk)
+- **تسجيل الدخول** — عبر البريد الإلكتروني أو Google أو GitHub
+- **إنشاء حساب** — مع التحقق من البريد الإلكتروني
+- **حماية المسارات** — middleware يحمي الصفحات الخاصة (Dashboard, الدورات المسجلة)
+- **إدارة الملف الشخصي** — عبر Clerk UserButton في شريط التنقل
+- **تصميم صفحات مخصصة** — صفحات signin/signup بتصميم split-screen احترافي
+
 ### 🎯 تجربة تعليمية متكاملة
 - **دورات فيديو تفاعلية** — مشغل فيديو مدمج مع دعم YouTube وتشغيل محاكى
 - **اختبارات تفاعلية** — نظام اختبارات شامل مع مؤقت تنازلي وشرح للإجابات
@@ -66,7 +74,7 @@
 
 ### 🏗️ بنية تقنية قوية
 - **إدارة حالة مركزية** — باستخدام Zustand
-- **قاعدة بيانات علائقية** — Prisma ORM مع SQLite
+- **قاعدة بيانات علائقية** — Prisma ORM مع SQLite (تطوير) / بيانات ثابتة (إنتاج)
 - **API Routes** — واجهة برمجة تطبيقات RESTful كاملة
 - **مكونات UI قابلة لإعادة الاستخدام** — باستخدام shadcn/ui
 
@@ -78,6 +86,7 @@
 |-------|---------|
 | **إطار العمل** | Next.js 16 (App Router) |
 | **اللغة** | TypeScript 5 |
+| **المصادقة** | Clerk (@clerk/nextjs) |
 | **التصميم** | Tailwind CSS 4 + shadcn/ui |
 | **قاعدة البيانات** | Prisma ORM + SQLite |
 | **إدارة الحالة** | Zustand |
@@ -94,7 +103,7 @@
 ### المتطلبات الأساسية
 
 - Node.js 18+ أو Bun
-- npm أو bun أو yarn
+- حساب [Clerk](https://clerk.com/) للحصول على مفاتيح API
 
 ### التثبيت
 
@@ -108,6 +117,29 @@ cd education-platform
 # تثبيت التبعيات
 npm install
 
+# إعداد متغيرات البيئة
+cp .env.example .env
+# ثم عدّل ملف .env وأضف مفاتيح Clerk
+```
+
+### متغيرات البيئة المطلوبة
+
+أنشئ ملف `.env` في جذر المشروع:
+
+```env
+# Clerk - المصادقة
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/signin
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_OUT_URL=/
+```
+
+### تشغيل المشروع
+
+```bash
 # إعداد قاعدة البيانات
 npx prisma generate
 npx prisma db push
@@ -127,39 +159,50 @@ npm run dev
 ```
 src/
 ├── app/
-│   ├── api/                    # واجهات برمجة التطبيقات
-│   │   ├── courses/            # مسارات الدورات (GET, POST)
-│   │   ├── enrollments/        # مسارات التسجيل (GET, POST, PATCH)
-│   │   ├── quiz-attempts/      # مسارات اختبارات (POST)
-│   │   ├── certificates/       # مسارات الشهادات (GET)
-│   │   ├── generate-certificate/ # إنشاء شهادة (POST)
-│   │   ├── progress/           # تحديث التقدم (PATCH)
-│   │   └── seed/               # بيانات تجريبية (POST)
-│   ├── globals.css             # الأنماط العامة
-│   ├── layout.tsx              # التخطيط الرئيسي
-│   └── page.tsx                # الصفحة الرئيسية
+│   ├── api/                       # واجهات برمجة التطبيقات
+│   │   ├── courses/               # مسارات الدورات (GET, POST)
+│   │   ├── enrollments/           # مسارات التسجيل (GET, POST, PATCH)
+│   │   ├── quiz-attempts/         # مسارات اختبارات (POST)
+│   │   ├── certificates/          # مسارات الشهادات (GET)
+│   │   ├── generate-certificate/  # إنشاء شهادة (POST)
+│   │   ├── progress/              # تحديث التقدم (PATCH)
+│   │   └── seed/                  # بيانات تجريبية (POST)
+│   ├── signin/                    # صفحة تسجيل الدخول (Clerk)
+│   ├── signup/                    # صفحة إنشاء حساب (Clerk)
+│   ├── globals.css                # الأنماط العامة
+│   ├── layout.tsx                 # التخطيط الرئيسي (RTL + AuthProvider)
+│   └── page.tsx                   # الصفحة الرئيسية
 │
 ├── components/
+│   ├── AuthProvider.tsx           # مزود المصادقة (Clerk Error Boundary)
+│   ├── PageTransition.tsx         # مكون الانتقالات
+│   ├── ThemeProvider.tsx          # مزود السمة
 │   ├── layout/
-│   │   ├── Header.tsx          # شريط التنقل العلوي
-│   │   └── Footer.tsx          # التذييل
+│   │   ├── Header.tsx             # شريط التنقل (مع Clerk UserButton)
+│   │   └── Footer.tsx             # التذييل
 │   ├── views/
-│   │   ├── HomeView.tsx        # الصفحة الرئيسية
-│   │   ├── CoursesView.tsx     # صفحة الدورات
-│   │   ├── CourseDetailView.tsx # تفاصيل الدورة
-│   │   ├── LessonView.tsx      # مشاهدة الدرس
-│   │   ├── QuizView.tsx        # الاختبار التفاعلي
-│   │   ├── QuizResultView.tsx  # نتيجة الاختبار
-│   │   ├── DashboardView.tsx   # لوحة التحكم
-│   │   └── CertificateView.tsx # الشهادة
-│   ├── ui/                     # مكونات shadcn/ui
-│   └── PageTransition.tsx      # مكون الانتقالات
+│   │   ├── HomeView.tsx           # الصفحة الرئيسية
+│   │   ├── CoursesView.tsx        # صفحة الدورات
+│   │   ├── CourseDetailView.tsx   # تفاصيل الدورة
+│   │   ├── LessonView.tsx         # مشاهدة الدرس
+│   │   ├── QuizView.tsx           # الاختبار التفاعلي
+│   │   ├── QuizResultView.tsx     # نتيجة الاختبار
+│   │   ├── DashboardView.tsx      # لوحة التحكم
+│   │   └── CertificateView.tsx    # الشهادة
+│   └── ui/                        # مكونات shadcn/ui
 │
 ├── store/
-│   └── useAppStore.ts          # إدارة الحالة (Zustand)
+│   └── useAppStore.ts             # إدارة الحالة (Zustand)
+│
+├── lib/
+│   ├── db.ts                      # اتصال قاعدة البيانات
+│   ├── static-data.ts             # بيانات ثابتة (للإنتاج)
+│   └── utils.ts                   # أدوات مساعدة
+│
+├── middleware.ts                   # حماية المسارات (Clerk)
 │
 └── prisma/
-    └── schema.prisma           # مخطط قاعدة البيانات
+    └── schema.prisma              # مخطط قاعدة البيانات
 ```
 
 ---
@@ -181,6 +224,26 @@ src/
 
 ---
 
+## 🔐 حماية المسارات
+
+المشروع يستخدم Clerk middleware لحماية المسارات:
+
+- **مسارات عامة** (لا تحتاج تسجيل دخول): `/`، `/courses`، `/signin`، `/signup`
+- **مسارات محمية** (تحتاج تسجيل دخول): `/dashboard`، `/courses/[id]/learn`، وغيرها
+
+```typescript
+// src/middleware.ts
+const isPublicRoute = createRouteMatcher(['/', '/courses(.*)', '/signin(.*)', '/signup(.*)']);
+
+export default clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect();
+  }
+});
+```
+
+---
+
 ## 🗄️ مخطط قاعدة البيانات
 
 ```
@@ -198,7 +261,7 @@ Course ──┬── Lesson ────── Quiz ── QuizQuestion
 ## 🌐 تدفق التطبيق
 
 ```
-الرئيسية → تصفح الدورات → تفاصيل الدورة → التسجيل
+الرئيسية → تصفح الدورات → تفاصيل الدورة → التسجيل (يتطلب تسجيل دخول)
                                             ↓
                                    مشاهدة الدروس → إكمال الدرس
                                             ↓
