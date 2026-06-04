@@ -3,16 +3,27 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 // Mock Prisma client before importing the route handlers
 const mockCourseFindMany = vi.fn()
 const mockEnrollmentCount = vi.fn()
+const mockEnrollmentGroupBy = vi.fn().mockResolvedValue([])
 
 vi.mock('@/lib/db', () => ({
   db: {
     course: {
       findMany: mockCourseFindMany,
       findUnique: vi.fn(),
+      count: vi.fn(),
     },
     enrollment: {
       count: mockEnrollmentCount,
+      groupBy: mockEnrollmentGroupBy,
     },
+  },
+}))
+
+// Mock @vercel/kv
+vi.mock('@vercel/kv', () => ({
+  kv: {
+    get: vi.fn().mockResolvedValue(null),
+    set: vi.fn().mockResolvedValue('OK'),
   },
 }))
 
@@ -57,6 +68,7 @@ describe('Courses API', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockEnrollmentCount.mockResolvedValue(0)
+    mockEnrollmentGroupBy.mockResolvedValue([])
   })
 
   it('GET /api/courses returns all courses', async () => {

@@ -1,28 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
 import { db } from '@/lib/db'
 import { validateQuery, getCertificatesQuerySchema } from '@/lib/validators'
-import { checkRateLimit, getRateLimitIdentifier, RATE_LIMITS } from '@/lib/rate-limit'
+import { RATE_LIMITS } from '@/lib/rate-limit'
+import { withAuthRateLimit } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
   try {
-    // 1. Require authentication
-    const { userId } = await auth()
-    if (!userId) {
-      return NextResponse.json({ error: 'يجب تسجيل الدخول أولاً' }, { status: 401 })
-    }
+    // 1. Auth + Rate limit (combined)
+    const authResult = await withAuthRateLimit(request, 'certificates', RATE_LIMITS.certificates)
+    if (authResult.error) return authResult.error
+    const { userId } = authResult
 
-    // 2. Rate limiting
-    const identifier = getRateLimitIdentifier(request, userId)
-    const rateLimit = checkRateLimit(identifier, 'certificates', RATE_LIMITS.certificates)
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { error: `طلبات كثيرة جداً. حاول مرة أخرى بعد ${Math.ceil(rateLimit.resetIn / 1000)} ثانية` },
-        { status: 429 }
-      )
-    }
-
-    // 3. Parse and validate query params
+    // 2. Parse and validate query params
     const { searchParams } = new URL(request.url)
     const paramsObj: Record<string, string> = {}
     searchParams.forEach((value, key) => { paramsObj[key] = value })
@@ -31,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     const { email } = queryValidation.data
 
-    // 4. Fetch certificates — only for the authenticated user's enrollments
+    // 3. Fetch certificates — only for the authenticated user's enrollments
     const enrollments = await db.enrollment.findMany({
       where: {
         OR: [

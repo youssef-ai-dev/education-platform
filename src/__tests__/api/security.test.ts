@@ -20,6 +20,7 @@ const mockEnrollmentFindMany = vi.fn()
 const mockEnrollmentFindFirst = vi.fn()
 const mockEnrollmentCreate = vi.fn()
 const mockEnrollmentCount = vi.fn()
+const mockEnrollmentGroupBy = vi.fn()
 
 vi.mock('@/lib/db', () => ({
   db: {
@@ -35,6 +36,7 @@ vi.mock('@/lib/db', () => ({
       create: mockEnrollmentCreate,
       update: mockEnrollmentUpdate,
       count: mockEnrollmentCount,
+      groupBy: mockEnrollmentGroupBy,
     },
     quizAttempt: {
       create: mockQuizAttemptCreate,
@@ -46,6 +48,14 @@ vi.mock('@/lib/db', () => ({
     quiz: {
       findUnique: mockQuizFindUnique,
     },
+  },
+}))
+
+// Mock @vercel/kv
+vi.mock('@vercel/kv', () => ({
+  kv: {
+    get: vi.fn().mockResolvedValue(null),
+    set: vi.fn().mockResolvedValue('OK'),
   },
 }))
 
@@ -82,7 +92,6 @@ describe('Quiz Attempts API - Security', () => {
   it('rejects requests with score/passed from client — only answers are accepted', async () => {
     const { POST } = await import('@/app/api/quiz-attempts/route')
 
-    // The API should ignore score and passed fields even if sent
     mockEnrollmentFindUnique.mockResolvedValue({ userId: 'user-123' })
     mockQuizFindUnique.mockResolvedValue({
       id: 'quiz-1',
@@ -163,7 +172,6 @@ describe('Quiz Attempts API - Security', () => {
     const response = await POST(request)
 
     if (response.status === 201) {
-      // Verify the score was calculated server-side
       expect(mockQuizAttemptCreate).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
@@ -417,12 +425,12 @@ describe('Enrollments API - Security', () => {
   })
 })
 
-// ─── Rate Limiting ────────────────────────────────────────────
+// ─── Rate Limiting (in-memory) ────────────────────────────────
 describe('Rate Limiting', () => {
   it('allows requests within the limit', async () => {
     const { checkRateLimit } = await import('@/lib/rate-limit')
 
-    const result = checkRateLimit('test-user', 'test-route', { limit: 5, windowSeconds: 60 })
+    const result = await checkRateLimit('test-user', 'test-route', { limit: 5, windowSeconds: 60 })
     expect(result.allowed).toBe(true)
     expect(result.remaining).toBe(4)
   })
@@ -432,11 +440,11 @@ describe('Rate Limiting', () => {
 
     // Make 5 requests (the limit)
     for (let i = 0; i < 5; i++) {
-      checkRateLimit('test-user-block', 'test-route', { limit: 5, windowSeconds: 60 })
+      await checkRateLimit('test-user-block', 'test-route', { limit: 5, windowSeconds: 60 })
     }
 
     // 6th request should be blocked
-    const result = checkRateLimit('test-user-block', 'test-route', { limit: 5, windowSeconds: 60 })
+    const result = await checkRateLimit('test-user-block', 'test-route', { limit: 5, windowSeconds: 60 })
     expect(result.allowed).toBe(false)
     expect(result.remaining).toBe(0)
   })
@@ -446,11 +454,11 @@ describe('Rate Limiting', () => {
 
     // Exhaust limit on route-a
     for (let i = 0; i < 3; i++) {
-      checkRateLimit('test-user-routes', 'route-a', { limit: 3, windowSeconds: 60 })
+      await checkRateLimit('test-user-routes', 'route-a', { limit: 3, windowSeconds: 60 })
     }
 
     // route-b should still be allowed
-    const result = checkRateLimit('test-user-routes', 'route-b', { limit: 3, windowSeconds: 60 })
+    const result = await checkRateLimit('test-user-routes', 'route-b', { limit: 3, windowSeconds: 60 })
     expect(result.allowed).toBe(true)
   })
 })

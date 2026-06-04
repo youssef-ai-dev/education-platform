@@ -1,40 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
 import { db } from '@/lib/db'
 import { validateBody, createQuizAttemptSchema } from '@/lib/validators'
-import { checkRateLimit, getRateLimitIdentifier, RATE_LIMITS } from '@/lib/rate-limit'
-import { verifyEnrollmentOwnership } from '@/lib/auth'
+import { RATE_LIMITS } from '@/lib/rate-limit'
+import { withAuthRateLimit, verifyEnrollmentOwnership } from '@/lib/auth'
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. Require authentication
-    const { userId } = await auth()
-    if (!userId) {
-      return NextResponse.json({ error: 'يجب تسجيل الدخول أولاً' }, { status: 401 })
-    }
+    // 1. Auth + Rate limit (combined)
+    const authResult = await withAuthRateLimit(request, 'quiz-attempts', RATE_LIMITS.quizAttempts)
+    if (authResult.error) return authResult.error
+    const { userId } = authResult
 
-    // 2. Rate limiting
-    const identifier = getRateLimitIdentifier(request, userId)
-    const rateLimit = checkRateLimit(identifier, 'quiz-attempts', RATE_LIMITS.quizAttempts)
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { error: `طلبات كثيرة جداً. حاول مرة أخرى بعد ${Math.ceil(rateLimit.resetIn / 1000)} ثانية` },
-        { status: 429 }
-      )
-    }
-
-    // 3. Parse and validate input (score/passed NOT accepted from client)
+    // 2. Parse and validate input (score/passed NOT accepted from client)
     const body = await request.json()
     const validation = validateBody(createQuizAttemptSchema, body)
     if (!validation.success) return validation.error
 
     const { enrollmentId, quizId, answers } = validation.data
 
-    // 4. Verify the user owns this enrollment
+    // 3. Verify the user owns this enrollment
     const ownership = await verifyEnrollmentOwnership(userId, enrollmentId)
     if (!ownership.authorized) return ownership.error!
 
-    // 5. Fetch the quiz with correct answers
+    // 4. Fetch the quiz with correct answers
     const quiz = await db.quiz.findUnique({
       where: { id: quizId },
       include: { questions: true },
@@ -44,7 +32,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'الاختبار غير موجود' }, { status: 404 })
     }
 
-    // 6. Calculate score SERVER-SIDE
+    // 5. Calculate score SERVER-SIDE
     const totalQuestions = quiz.questions.length
     if (totalQuestions === 0) {
       return NextResponse.json({ error: 'الاختبار لا يحتوي على أسئلة' }, { status: 400 })
@@ -62,7 +50,7 @@ export async function POST(request: NextRequest) {
     const score = Math.round((correctCount / totalQuestions) * 100)
     const passed = score >= quiz.passingScore
 
-    // 7. Save the attempt
+    // 6. Save the attempt
     const attempt = await db.quizAttempt.create({
       data: {
         enrollmentId,

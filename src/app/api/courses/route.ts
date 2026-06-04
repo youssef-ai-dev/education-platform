@@ -1,32 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { validateQuery, getCoursesQuerySchema } from '@/lib/validators'
-import { checkRateLimit, getRateLimitIdentifier, RATE_LIMITS } from '@/lib/rate-limit'
-
-const BASE_ENROLLMENT_COUNTS: Record<string, number> = {
-  'course-web-dev': 1250,
-  'course-react': 2100,
-  'course-figma': 890,
-  'course-agile': 670,
-  'course-english': 1580,
-  'course-data': 980,
-}
+import { RATE_LIMITS } from '@/lib/rate-limit'
+import { withRateLimit } from '@/lib/auth'
+import { transformCourse, getStudentsCountBatch, buildCourseWhereClause } from '@/lib/api-helpers'
 
 // Courses listing is public (no auth required) — users should see courses before signing up
 
 export async function GET(request: NextRequest) {
   try {
-    // Rate limiting (no userId needed for public routes)
-    const identifier = getRateLimitIdentifier(request)
-    const rateLimit = checkRateLimit(identifier, 'courses', RATE_LIMITS.courses)
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { error: `طلبات كثيرة جداً. حاول مرة أخرى بعد ${Math.ceil(rateLimit.resetIn / 1000)} ثانية` },
-        { status: 429 }
-      )
-    }
+    // 1. Rate limiting only (public route, no auth)
+    const rateLimitResult = await withRateLimit(request, 'courses', RATE_LIMITS.courses)
+    if (rateLimitResult.error) return rateLimitResult.error
 
-    // Parse and validate query params
+    // 2. Parse and validate query params
     const { searchParams } = new URL(request.url)
     const paramsObj: Record<string, string> = {}
     searchParams.forEach((value, key) => { paramsObj[key] = value })
@@ -35,21 +22,10 @@ export async function GET(request: NextRequest) {
 
     const { category, search } = queryValidation.data
 
-    // Build where clause
-    const where: any = {}
-    if (category && category !== 'الكل') {
-      where.category = category
-    }
-    if (search) {
-      const s = search.toLowerCase()
-      where.OR = [
-        { title: { contains: s } },
-        { description: { contains: s } },
-        { instructor: { contains: s } },
-      ]
-    }
+    // 3. Build where clause with proper types
+    const where = buildCourseWhereClause(category, search)
 
-    // Fetch from database directly
+    // 4. Fetch from database
     const courses = await db.course.findMany({
       where,
       include: {
@@ -60,63 +36,13 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'asc' },
     })
 
-    const result = courses.map(course => {
-      const baseCount = BASE_ENROLLMENT_COUNTS[course.id] || 0
-      const studentsCount = baseCount + course.enrollments.length
+    // 5. Get real students counts from DB (batch query for efficiency)
+    const courseIds = courses.map(c => c.id)
+    const countsMap = await getStudentsCountBatch(courseIds)
 
-      return {
-        id: course.id,
-        title: course.title,
-        description: course.description,
-        category: course.category,
-        thumbnailUrl: course.thumbnailUrl,
-        instructor: course.instructor,
-        duration: course.duration,
-        rating: course.rating,
-        studentsCount,
-        price: course.price,
-        level: course.level,
-        createdAt: course.createdAt.toISOString(),
-        lessons: course.lessons.map(l => ({
-          id: l.id,
-          title: l.title,
-          description: l.description,
-          videoUrl: l.videoUrl,
-          duration: l.duration,
-          order: l.order,
-          courseId: l.courseId,
-          isFree: l.isFree,
-        })),
-        quizzes: course.quizzes.map(q => ({
-          id: q.id,
-          title: q.title,
-          courseId: q.courseId,
-          lessonId: q.lessonId,
-          timeLimit: q.timeLimit,
-          passingScore: q.passingScore,
-          questions: q.questions.map(qq => ({
-            id: qq.id,
-            quizId: qq.quizId,
-            question: qq.question,
-            options: qq.options,
-            correctAnswer: qq.correctAnswer,
-            explanation: qq.explanation,
-          })),
-          attempts: [],
-        })),
-        enrollments: course.enrollments.map(e => ({
-          id: e.id,
-          userId: e.userId,
-          studentName: e.studentName,
-          studentEmail: e.studentEmail,
-          courseId: e.courseId,
-          progress: e.progress,
-          enrolledAt: e.enrolledAt.toISOString(),
-          completedAt: e.completedAt ? e.completedAt.toISOString() : null,
-        })),
-        _count: { enrollments: studentsCount },
-      }
-    })
+    const result = courses.map(course =>
+      transformCourse(course, countsMap.get(course.id) || 0)
+    )
 
     return NextResponse.json(result)
   } catch (error) {

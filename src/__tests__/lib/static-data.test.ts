@@ -1,10 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Use vi.hoisted to create mock functions that can be used in vi.mock factories
-const { mockCourseFindMany, mockCourseFindUnique, mockEnrollmentCount } = vi.hoisted(() => ({
+const { mockCourseFindMany, mockCourseFindUnique, mockEnrollmentCount, mockEnrollmentGroupBy } = vi.hoisted(() => ({
   mockCourseFindMany: vi.fn(),
   mockCourseFindUnique: vi.fn(),
   mockEnrollmentCount: vi.fn(),
+  mockEnrollmentGroupBy: vi.fn().mockResolvedValue([]),
 }))
 
 vi.mock('@/lib/db', () => ({
@@ -12,6 +13,7 @@ vi.mock('@/lib/db', () => ({
     course: {
       findMany: mockCourseFindMany,
       findUnique: mockCourseFindUnique,
+      count: vi.fn(),
     },
     enrollment: {
       count: mockEnrollmentCount,
@@ -20,6 +22,7 @@ vi.mock('@/lib/db', () => ({
       findUnique: vi.fn(),
       create: vi.fn(),
       update: vi.fn(),
+      groupBy: mockEnrollmentGroupBy,
     },
     quizAttempt: {
       create: vi.fn(),
@@ -32,8 +35,16 @@ vi.mock('@/lib/db', () => ({
   },
 }))
 
+// Mock @vercel/kv
+vi.mock('@vercel/kv', () => ({
+  kv: {
+    get: vi.fn().mockResolvedValue(null),
+    set: vi.fn().mockResolvedValue('OK'),
+  },
+}))
+
 // Import after mocking
-import { getCourses, getCourseById, BASE_ENROLLMENT_COUNTS } from '@/lib/static-data'
+import { getCourses, getCourseById } from '@/lib/static-data'
 
 const mockCourseData = [
   {
@@ -109,8 +120,9 @@ const mockCourseData = [
 describe('static-data', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Default: return 0 for enrollment counts
+    // Default: return 0 for enrollment counts (real DB counts)
     mockEnrollmentCount.mockResolvedValue(0)
+    mockEnrollmentGroupBy.mockResolvedValue([])
   })
 
   describe('getCourses', () => {
@@ -178,25 +190,24 @@ describe('static-data', () => {
       )
     })
 
-    it('includes studentsCount from base enrollment counts', async () => {
+    it('uses real enrollment count from database', async () => {
       mockCourseFindMany.mockResolvedValue(mockCourseData)
-
-      const courses = await getCourses()
-
-      // The web-dev course has a base count of 1250
-      expect(courses[0].studentsCount).toBe(1250)
-      // The react course has a base count of 2100
-      expect(courses[1].studentsCount).toBe(2100)
-    })
-
-    it('adds DB enrollments to base count', async () => {
-      mockCourseFindMany.mockResolvedValue(mockCourseData)
+      // Simulate 5 real enrollments for course-web-dev
       mockEnrollmentCount.mockResolvedValue(5)
 
       const courses = await getCourses()
 
-      // Base 1250 + 5 from DB
-      expect(courses[0].studentsCount).toBe(1255)
+      // studentsCount should be the real DB count (5), not hardcoded fake numbers
+      expect(courses[0].studentsCount).toBe(5)
+    })
+
+    it('returns 0 studentsCount when no enrollments exist', async () => {
+      mockCourseFindMany.mockResolvedValue(mockCourseData)
+      mockEnrollmentCount.mockResolvedValue(0)
+
+      const courses = await getCourses()
+
+      expect(courses[0].studentsCount).toBe(0)
     })
   })
 
@@ -227,18 +238,6 @@ describe('static-data', () => {
       const course = await getCourseById('non-existent-id')
 
       expect(course).toBeUndefined()
-    })
-  })
-
-  describe('BASE_ENROLLMENT_COUNTS', () => {
-    it('has counts for all 6 courses', () => {
-      expect(Object.keys(BASE_ENROLLMENT_COUNTS)).toHaveLength(6)
-      expect(BASE_ENROLLMENT_COUNTS['course-web-dev']).toBe(1250)
-      expect(BASE_ENROLLMENT_COUNTS['course-react']).toBe(2100)
-      expect(BASE_ENROLLMENT_COUNTS['course-figma']).toBe(890)
-      expect(BASE_ENROLLMENT_COUNTS['course-agile']).toBe(670)
-      expect(BASE_ENROLLMENT_COUNTS['course-english']).toBe(1580)
-      expect(BASE_ENROLLMENT_COUNTS['course-data']).toBe(980)
     })
   })
 })
