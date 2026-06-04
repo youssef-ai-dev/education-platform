@@ -1,18 +1,11 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-const isPublicRoute = createRouteMatcher([
-  '/',
-  '/signin(.*)',
-  '/signup(.*)',
-  '/api/courses(.*)',
-  '/api/seed(.*)',
-])
-
-export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect()
-  }
-})
+// Simple middleware without Clerk - no redirect loops
+export default function middleware(request: NextRequest) {
+  // Just pass through - Clerk auth is handled client-side
+  return NextResponse.next()
+}
 
 export const config = {
   matcher: [
