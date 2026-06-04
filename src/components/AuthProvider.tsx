@@ -1,9 +1,9 @@
 'use client'
 
-import { useAuth, useUser } from '@clerk/nextjs'
-import { ClerkProvider, SignIn, SignUp, UserButton as ClerkUserButton } from '@clerk/nextjs'
+import { ClerkProvider, useAuth as useClerkAuth, useUser as useClerkUser, SignIn, SignUp, UserButton as ClerkUserButton, SignInButton } from '@clerk/nextjs'
+import type { ReactNode } from 'react'
 
-function ClerkThemeProvider({ children }: { children: React.ReactNode }) {
+function ClerkThemeProvider({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider
       appearance={{
@@ -36,5 +36,6 @@ function ClerkThemeProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-export { ClerkThemeProvider as AuthProvider, useAuth, useUser }
-export { ClerkUserButton, SignIn, SignUp }
+export { ClerkThemeProvider as AuthProvider }
+export { useClerkAuth as useAuth, useClerkUser as useUser }
+export { ClerkUserButton as UserButton, SignInButton, SignIn, SignUp }

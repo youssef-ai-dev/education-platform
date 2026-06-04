@@ -15,16 +15,20 @@ import {
   Sparkles,
   LogIn,
 } from 'lucide-react'
-import { useAuth, useUser, SignInButton, UserButton } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
+import { useAuth, useUser } from '@/components/AuthProvider'
+
+// Clerk components - imported at top level but only rendered inside ClerkProvider
+import { SignInButton, UserButton } from '@clerk/nextjs'
 
 export default function Header() {
   const { navigate, searchQuery, setSearchQuery, currentView } = useAppStore()
-  const { isSignedIn } = useAuth()
+  const { isSignedIn, isLoaded } = useAuth()
   const { user } = useUser()
-  const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
+
+  // Check if Clerk is available (isLoaded means ClerkProvider is working)
+  const clerkAvailable = isLoaded !== undefined
 
   const navItems = [
     { key: 'home' as const, label: 'الرئيسية', icon: Home },
@@ -38,6 +42,17 @@ export default function Header() {
       navigate('courses')
     }
   }
+
+  // Login button - works with or without Clerk
+  const LoginButton = () => (
+    <a
+      href="/signin"
+      className="inline-flex items-center justify-center whitespace-nowrap text-sm bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 h-10 px-5 rounded-xl font-semibold text-white shadow-md shadow-emerald-200/50 hover:shadow-lg transition-all duration-300 gap-2"
+    >
+      <LogIn className="w-4 h-4 inline-block ml-1" />
+      تسجيل الدخول
+    </a>
+  )
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -126,7 +141,7 @@ export default function Header() {
               </div>
             </form>
 
-            {/* User section - Clerk */}
+            {/* User section */}
             {isSignedIn ? (
               <UserButton
                 afterSignOutUrl="/"
@@ -138,12 +153,10 @@ export default function Header() {
               />
             ) : (
               <SignInButton mode="redirect">
-                <Button asChild className="bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 h-10 px-5 rounded-xl font-semibold text-white shadow-md shadow-emerald-200/50 hover:shadow-lg transition-all duration-300 gap-2">
-                  <span>
-                    <LogIn className="w-4 h-4 inline-block ml-1" />
-                    تسجيل الدخول
-                  </span>
-                </Button>
+                <span className="inline-flex items-center justify-center whitespace-nowrap text-sm bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 h-10 px-5 rounded-xl font-semibold text-white shadow-md shadow-emerald-200/50 hover:shadow-lg transition-all duration-300 gap-2 cursor-pointer">
+                  <LogIn className="w-4 h-4 inline-block ml-1" />
+                  تسجيل الدخول
+                </span>
               </SignInButton>
             )}
           </div>
@@ -202,12 +215,10 @@ export default function Header() {
                         </div>
                       ) : (
                         <SignInButton mode="redirect">
-                          <Button asChild className="w-full bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 h-11 rounded-xl font-semibold text-white shadow-md shadow-emerald-200/50 gap-2">
-                            <span>
-                              <LogIn className="w-4 h-4 inline-block ml-1" />
-                              تسجيل الدخول
-                            </span>
-                          </Button>
+                          <span className="w-full inline-flex items-center justify-center bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 h-11 rounded-xl font-semibold text-white shadow-md shadow-emerald-200/50 gap-2 cursor-pointer">
+                            <LogIn className="w-4 h-4 inline-block ml-1" />
+                            تسجيل الدخول
+                          </span>
                         </SignInButton>
                       )}
                     </div>
