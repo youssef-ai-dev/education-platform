@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/components/AuthProvider";
 
 export const metadata: Metadata = {
   title: "علم - منصة التعلم الإلكتروني",
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className="antialiased bg-background text-foreground min-h-screen">
-        {children}
-        <Toaster position="top-center" richColors />
+        <AuthProvider>
+          {children}
+          <Toaster position="top-center" richColors />
+        </AuthProvider>
       </body>
     </html>
   );

@@ -13,11 +13,29 @@ import {
   BookOpen,
   Home,
   Sparkles,
+  LogIn,
+  LogOut,
+  User as UserIcon,
 } from 'lucide-react'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 export default function Header() {
-  const { navigate, studentName, searchQuery, setSearchQuery, currentView } =
+  const { navigate, studentName, searchQuery, setSearchQuery, currentView, user, setUser, logout: storeLogout } =
     useAppStore()
+  const { data: session } = useSession()
+
+  // Sync NextAuth session with Zustand store
+  if (session?.user && !user) {
+    setUser({
+      id: (session.user as any).id || '',
+      name: session.user.name || '',
+      email: session.user.email || '',
+      image: session.user.image || null,
+      role: (session.user as any).role || 'student',
+    })
+  }
+
+  const displayName = user?.name || studentName
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
 
@@ -28,11 +46,16 @@ export default function Header() {
   ]
 
   const initials = useMemo(() => {
-    if (!studentName) return ''
-    const parts = studentName.trim().split(/\s+/)
+    if (!displayName) return ''
+    const parts = displayName.trim().split(/\s+/)
     if (parts.length >= 2) return parts[0][0] + parts[1][0]
     return parts[0].slice(0, 2)
-  }, [studentName])
+  }, [displayName])
+
+  const handleLogout = async () => {
+    storeLogout()
+    await signOut({ redirect: false })
+  }
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -143,26 +166,45 @@ export default function Header() {
               </div>
             </form>
 
-            {/* User avatar */}
-            {studentName && (
-              <div className="flex items-center gap-2.5 cursor-default">
-                <div className="relative group/avatar">
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full blur-sm opacity-0 group-hover/avatar:opacity-30 transition-opacity duration-300" />
-                  <div className="relative w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-emerald-200/40 ring-2 ring-white">
-                    {initials}
+            {/* User section */}
+            {displayName ? (
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5 cursor-default">
+                  <div className="relative group/avatar">
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full blur-sm opacity-0 group-hover/avatar:opacity-30 transition-opacity duration-300" />
+                    <div className="relative w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-emerald-200/40 ring-2 ring-white">
+                      {initials}
+                    </div>
+                    {/* Online indicator */}
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-white" />
                   </div>
-                  {/* Online indicator */}
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-white" />
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold text-gray-700 leading-tight">
+                      {displayName}
+                    </span>
+                    <span className="text-[11px] text-emerald-500 font-medium">
+                      {user?.role === 'instructor' ? 'مدرب' : user?.role === 'admin' ? 'مدير' : 'طالب'}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-gray-700 leading-tight">
-                    {studentName}
-                  </span>
-                  <span className="text-[11px] text-emerald-500 font-medium">
-                    طالب
-                  </span>
-                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleLogout}
+                  className="h-9 w-9 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50/50 transition-colors duration-200"
+                  title="تسجيل الخروج"
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
               </div>
+            ) : (
+              <Button
+                onClick={() => signIn()}
+                className="bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 h-10 px-5 rounded-xl font-semibold text-white shadow-md shadow-emerald-200/50 hover:shadow-lg transition-all duration-300 gap-2"
+              >
+                <LogIn className="w-4 h-4" />
+                تسجيل الدخول
+              </Button>
             )}
           </div>
 
@@ -213,20 +255,37 @@ export default function Header() {
                     </div>
 
                     {/* User info in drawer */}
-                    {studentName && (
+                    {displayName ? (
                       <div className="mt-5 flex items-center gap-3 p-3 rounded-2xl bg-white/80 border border-emerald-100/60 shadow-sm">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex items-center justify-center text-sm font-bold shadow-md shadow-emerald-200/40 ring-2 ring-white">
                           {initials}
                         </div>
                         <div className="flex flex-col">
                           <span className="text-sm font-semibold text-gray-700">
-                            {studentName}
+                            {displayName}
                           </span>
                           <span className="text-[11px] text-emerald-500 font-medium">
-                            طالب
+                            {user?.role === 'instructor' ? 'مدرب' : user?.role === 'admin' ? 'مدير' : 'طالب'}
                           </span>
                         </div>
-                        <Sparkles className="w-4 h-4 text-amber-400 mr-auto" />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={handleLogout}
+                          className="mr-auto h-8 w-8 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50/50"
+                        >
+                          <LogOut className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="mt-5">
+                        <Button
+                          onClick={() => signIn()}
+                          className="w-full bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 h-11 rounded-xl font-semibold text-white shadow-md shadow-emerald-200/50 gap-2"
+                        >
+                          <LogIn className="w-4 h-4" />
+                          تسجيل الدخول
+                        </Button>
                       </div>
                     )}
                   </div>

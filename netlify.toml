@@ -1,6 +1,11 @@
 [build]
-  command = "npm run build"
+  command = "npx prisma generate && next build"
   publish = ".next"
+
+[build.environment]
+  DATABASE_URL = "file:./dev.db"
+  NEXTAUTH_SECRET = "build-secret-not-used-at-runtime"
+  NEXTAUTH_URL = "https://gentle-starburst-b296c4.netlify.app"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

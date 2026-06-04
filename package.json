@@ -5,7 +5,7 @@
   "description": "منصة تعليمية إلكترونية متكاملة باللغة العربية - دورات فيديو، اختبارات تفاعلية، وشهادات معتمدة",
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint .",
     "db:push": "prisma db push",
