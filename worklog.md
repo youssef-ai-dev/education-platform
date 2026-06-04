@@ -43,3 +43,5 @@ Stage Summary:
 - CI/CD: .github/workflows/ci.yml — 3 jobs (lint, test, build)
 - Tests: 54 passing (كانت 39) — 6 test files
 - Files changed: middleware.ts, next.config.ts, all route handlers, README.md, .env.example
+- Pushed to GitHub: main branch at 76891b9
+- ⚠️ ملف .github/workflows/ci.yml لازم يتضيف يدوياً على GitHub (التوكين مش عنده workflow scope)
