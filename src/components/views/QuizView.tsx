@@ -88,37 +88,56 @@ export default function QuizView() {
     setSubmitted(true)
     if (timerRef.current) clearInterval(timerRef.current)
 
-    let correct = 0
-    quiz.questions.forEach((q, i) => {
-      if (answers[i] === q.correctAnswer) correct++
-    })
-
-    const score = Math.round((correct / quiz.questions.length) * 100)
-    const passed = score >= quiz.passingScore
-
-    setQuizResult({ score, total: quiz.questions.length, passed })
-
-    // Save to API
+    // Submit answers to server — score/passed calculated SERVER-SIDE for security
     try {
       const enrollRes = await fetch(`/api/enrollments?email=${encodeURIComponent(studentEmail)}`)
       const enrollments = await enrollRes.json()
       const enrollment = enrollments.find((e: { courseId: string }) => e.courseId === quiz.courseId)
 
       if (enrollment) {
-        await fetch('/api/quiz-attempts', {
+        const res = await fetch('/api/quiz-attempts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             enrollmentId: enrollment.id,
             quizId: quiz.id,
             answers,
-            score,
-            passed,
           })
         })
+
+        if (res.ok) {
+          const result = await res.json()
+          // Use the server-calculated score and passed status
+          setQuizResult({ score: result.score, total: quiz.questions.length, passed: result.passed })
+        } else {
+          // Fallback: calculate locally for display only (not trusted)
+          let correct = 0
+          quiz.questions.forEach((q, i) => {
+            if (answers[i] === q.correctAnswer) correct++
+          })
+          const score = Math.round((correct / quiz.questions.length) * 100)
+          const passed = score >= quiz.passingScore
+          setQuizResult({ score, total: quiz.questions.length, passed })
+        }
+      } else {
+        // No enrollment found — calculate locally for display
+        let correct = 0
+        quiz.questions.forEach((q, i) => {
+          if (answers[i] === q.correctAnswer) correct++
+        })
+        const score = Math.round((correct / quiz.questions.length) * 100)
+        const passed = score >= quiz.passingScore
+        setQuizResult({ score, total: quiz.questions.length, passed })
       }
     } catch {
-      // Silently fail
+      // Network error — calculate locally for display
+      let correct = 0
+      quiz.questions.forEach((q, i) => {
+        if (answers[i] === q.correctAnswer) correct++
+      })
+      const score = Math.round((correct / quiz.questions.length) * 100)
+      const passed = score >= quiz.passingScore
+      setQuizResult({ score, total: quiz.questions.length, passed })
     }
 
     navigate('quiz-result')
