@@ -122,7 +122,7 @@ export default function QuizView() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-emerald-50/30 flex items-center justify-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
         >
@@ -206,7 +206,7 @@ export default function QuizView() {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentQuestion}
-            initial={{ opacity: 0, x: 50, scale: 0.98 }}
+            initial={false}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -50, scale: 0.98 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
@@ -247,7 +247,7 @@ export default function QuizView() {
                     return (
                       <motion.div
                         key={idx}
-                        initial={{ opacity: 0, y: 15 }}
+                        initial={false}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 + idx * 0.07 }}
                       >
@@ -275,7 +275,7 @@ export default function QuizView() {
                           }`}>{option}</span>
                           {isSelected && (
                             <motion.div
-                              initial={{ scale: 0, opacity: 0 }}
+                              initial={false}
                               animate={{ scale: 1, opacity: 1 }}
                               className="mr-auto"
                             >
@@ -373,7 +373,7 @@ export default function QuizView() {
 
             {/* Answered Progress Summary */}
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={false}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
               className="mt-6 text-center"

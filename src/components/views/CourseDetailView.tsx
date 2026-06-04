@@ -151,7 +151,7 @@ export default function CourseDetailView() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Back button */}
           <motion.button
-            initial={{ opacity: 0, x: 10 }}
+            initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
             onClick={() => navigate('courses')}
@@ -166,7 +166,7 @@ export default function CourseDetailView() {
           <div className="flex flex-col lg:flex-row gap-8 items-stretch">
             {/* Course Info */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
               className="flex-1 flex flex-col justify-center"
@@ -225,7 +225,7 @@ export default function CourseDetailView() {
 
             {/* Sidebar Card */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
               className="lg:w-[340px] shrink-0"
@@ -428,7 +428,7 @@ export default function CourseDetailView() {
             {/* Overview Tab */}
             <TabsContent value="overview" className="mt-6">
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
                 className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100"
@@ -442,7 +442,7 @@ export default function CourseDetailView() {
                   {(course.lessons ?? []).map((lesson, index) => (
                     <motion.div
                       key={lesson.id}
-                      initial={{ opacity: 0, x: -10 }}
+                      initial={false}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.04 }}
                       className="flex items-center gap-3 text-sm text-gray-600 bg-gray-50/80 rounded-xl px-4 py-3 hover:bg-emerald-50/60 transition-colors"
@@ -460,7 +460,7 @@ export default function CourseDetailView() {
             {/* Curriculum Tab */}
             <TabsContent value="curriculum" className="mt-6">
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
                 className="space-y-3"
@@ -571,7 +571,7 @@ export default function CourseDetailView() {
             {/* Quizzes Tab */}
             <TabsContent value="quizzes" className="mt-6">
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
                 className="space-y-4"

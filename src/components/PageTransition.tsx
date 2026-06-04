@@ -43,7 +43,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
       <AnimatePresence mode="wait">
         <motion.div
           key={displayView}
-          initial={{ opacity: 0, x: direction.current * 40, scale: 0.98 }}
+          initial={false}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           exit={{ opacity: 0, x: direction.current * -20, scale: 0.99 }}
           transition={{

@@ -81,13 +81,13 @@ export default function HomeView() {
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 py-20 md:py-28 lg:py-32">
             {/* Text Content */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
+              initial={false}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7 }}
               className="flex-1 text-center lg:text-right"
             >
               <motion.div
-                initial={{ opacity: 0, y: -10 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
                 className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-5 py-2.5 rounded-full mb-8 text-sm font-medium border border-white/10"
@@ -145,7 +145,7 @@ export default function HomeView() {
 
             {/* Hero Illustration */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={false}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               className="flex-1 max-w-lg w-full"
@@ -232,7 +232,7 @@ export default function HomeView() {
               {stats.map((stat, i) => (
                 <motion.div
                   key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={false}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 + 0.5, duration: 0.4 }}
                   className="text-center group"
@@ -260,7 +260,7 @@ export default function HomeView() {
       <section className="bg-gray-50 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -294,7 +294,7 @@ export default function HomeView() {
           {/* Error State */}
           {error && !loading && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={false}
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-16 bg-white rounded-3xl border border-gray-100"
             >
@@ -321,7 +321,7 @@ export default function HomeView() {
                 return (
                   <motion.div
                     key={course.id}
-                    initial={{ opacity: 0, y: 24 }}
+                    initial={false}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1, duration: 0.4 }}
@@ -384,7 +384,7 @@ export default function HomeView() {
 
           {!loading && !error && courses.length > 0 && (
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={false}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               className="text-center mt-12"
@@ -413,7 +413,7 @@ export default function HomeView() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -431,7 +431,7 @@ export default function HomeView() {
             {categories.map((cat, i) => (
               <motion.div
                 key={cat.name}
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={false}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.06, duration: 0.3 }}
@@ -464,7 +464,7 @@ export default function HomeView() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -482,7 +482,7 @@ export default function HomeView() {
             {testimonials.map((t, i) => (
               <motion.div
                 key={t.name}
-                initial={{ opacity: 0, y: 24 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15, duration: 0.4 }}
@@ -538,7 +538,7 @@ export default function HomeView() {
 
         <div className="max-w-4xl mx-auto px-4 text-center relative">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}

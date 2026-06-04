@@ -22,7 +22,7 @@ model Course {
   price        Float    @default(0)
   level        String   @default("مبتدئ")
   createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  updatedAt    DateTime @default(now()) @updatedAt
 
   lessons      Lesson[]
   quizzes      Quiz[]
@@ -72,9 +72,9 @@ model QuizQuestion {
 
 model Enrollment {
   id           String    @id @default(cuid())
-  userId       String    // Clerk user ID
-  studentName  String    // Cached from Clerk for display
-  studentEmail String    // Cached from Clerk for display
+  userId       String    @default("") // Clerk user ID
+  studentName  String    @default("") // Cached from Clerk for display
+  studentEmail String    @default("") // Cached from Clerk for display
   courseId     String
   progress     Float     @default(0)
   enrolledAt   DateTime  @default(now())

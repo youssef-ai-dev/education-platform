@@ -151,7 +151,7 @@ export default function DashboardView() {
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23059669' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }} />
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-md w-full mx-4 relative z-10"
@@ -162,7 +162,7 @@ export default function DashboardView() {
             <div className="p-8 text-center">
               {/* Logo icon */}
               <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
+                initial={false}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
                 className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mx-auto mb-5 shadow-lg shadow-emerald-500/30"
@@ -170,7 +170,7 @@ export default function DashboardView() {
                 <BookOpen className="w-10 h-10 text-white" />
               </motion.div>
               <motion.h2
-                initial={{ opacity: 0, y: 10 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
                 className="text-2xl font-bold text-gray-900 mb-1.5"
@@ -178,7 +178,7 @@ export default function DashboardView() {
                 لوحة التحكم
               </motion.h2>
               <motion.p
-                initial={{ opacity: 0, y: 10 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
                 className="text-gray-500 mb-7 text-sm"
@@ -187,7 +187,7 @@ export default function DashboardView() {
               </motion.p>
               <div className="space-y-4 text-right">
                 <motion.div
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={false}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
                   className="space-y-2"
@@ -202,7 +202,7 @@ export default function DashboardView() {
                   />
                 </motion.div>
                 <motion.div
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={false}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.45 }}
                   className="space-y-2"
@@ -219,7 +219,7 @@ export default function DashboardView() {
                   />
                 </motion.div>
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={false}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
@@ -255,7 +255,7 @@ export default function DashboardView() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="flex items-center gap-5">
               <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
+                initial={false}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 20 }}
                 className="relative"
@@ -267,7 +267,7 @@ export default function DashboardView() {
                 <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-green-400 ring-2 ring-emerald-700" />
               </motion.div>
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={false}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 }}
               >
@@ -298,7 +298,7 @@ export default function DashboardView() {
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
@@ -324,7 +324,7 @@ export default function DashboardView() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
             {/* Progress Bar Chart */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
@@ -365,7 +365,7 @@ export default function DashboardView() {
 
             {/* Category Pie Chart */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
@@ -404,7 +404,7 @@ export default function DashboardView() {
         {/* Weekly Activity */}
         {enrollments.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
           >
@@ -492,7 +492,7 @@ export default function DashboardView() {
               {enrollments.map((enrollment, i) => (
                 <motion.div
                   key={enrollment.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={false}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
@@ -576,7 +576,7 @@ export default function DashboardView() {
               {certificates.map((cert, i) => (
                 <motion.div
                   key={cert.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={false}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >

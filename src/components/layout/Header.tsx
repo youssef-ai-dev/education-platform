@@ -28,7 +28,8 @@ export default function Header() {
   const [searchFocused, setSearchFocused] = useState(false)
 
   // Check if Clerk is available (isLoaded means ClerkProvider is working)
-  const clerkAvailable = isLoaded !== undefined
+  // If Clerk fails to load, isSignedIn will be undefined/false - show login link
+  const clerkAvailable = isLoaded === true
 
   const navItems = [
     { key: 'home' as const, label: 'الرئيسية', icon: Home },

@@ -77,7 +77,7 @@ export default function QuizResultView() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-emerald-50/30 flex items-center justify-center py-12 px-4">
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 30 }}
+        initial={false}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-lg w-full"
@@ -100,7 +100,7 @@ export default function QuizResultView() {
             {passed && (
               <>
                 <motion.div
-                  initial={{ opacity: 0, scale: 0, rotate: -180 }}
+                  initial={false}
                   animate={{ opacity: 0.25, scale: 1, rotate: 0 }}
                   transition={{ delay: 0.5, duration: 0.6 }}
                   className="absolute top-3 right-5"
@@ -108,7 +108,7 @@ export default function QuizResultView() {
                   <Star className="w-8 h-8 text-amber-200" />
                 </motion.div>
                 <motion.div
-                  initial={{ opacity: 0, scale: 0, rotate: 180 }}
+                  initial={false}
                   animate={{ opacity: 0.2, scale: 1, rotate: 0 }}
                   transition={{ delay: 0.7, duration: 0.6 }}
                   className="absolute bottom-4 left-8"
@@ -116,7 +116,7 @@ export default function QuizResultView() {
                   <Star className="w-6 h-6 text-amber-200" />
                 </motion.div>
                 <motion.div
-                  initial={{ opacity: 0, scale: 0 }}
+                  initial={false}
                   animate={{ opacity: 0.15, scale: 1 }}
                   transition={{ delay: 0.9, duration: 0.6 }}
                   className="absolute top-8 left-16"
@@ -124,7 +124,7 @@ export default function QuizResultView() {
                   <Sparkles className="w-10 h-10 text-white" />
                 </motion.div>
                 <motion.div
-                  initial={{ opacity: 0, scale: 0 }}
+                  initial={false}
                   animate={{ opacity: 0.15, scale: 1 }}
                   transition={{ delay: 1.1, duration: 0.6 }}
                   className="absolute bottom-8 right-16"
@@ -159,7 +159,7 @@ export default function QuizResultView() {
             )}
 
             <motion.h2
-              initial={{ opacity: 0, y: 10 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
               className="relative z-10 text-2xl md:text-3xl font-extrabold text-white mb-2"
@@ -167,7 +167,7 @@ export default function QuizResultView() {
               {passed ? 'مبروك! لقد نجحت! 🎉' : 'لم تنجح هذه المرة'}
             </motion.h2>
             <motion.p
-              initial={{ opacity: 0 }}
+              initial={false}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.9 }}
               className="relative z-10 text-white/75 text-lg font-medium"
@@ -222,7 +222,7 @@ export default function QuizResultView() {
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <motion.span
-                      initial={{ opacity: 0, scale: 0.5 }}
+                      initial={false}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 1, type: 'spring', stiffness: 200 }}
                       className="text-5xl font-black text-gray-900 tabular-nums"

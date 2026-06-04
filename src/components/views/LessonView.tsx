@@ -153,7 +153,7 @@ export default function LessonView() {
                 <div className="text-center z-10 px-6">
                   <motion.p
                     className="text-emerald-400/80 text-sm font-medium mb-3 tracking-wide"
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={false}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
                   >
@@ -257,7 +257,7 @@ export default function LessonView() {
               <span>العودة للدورة: <span className="font-medium">{course.title}</span></span>
             </motion.button>
 
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+            <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 leading-tight">{currentLesson.title}</h1>
               <p className="text-gray-600 mb-8 leading-relaxed text-[15px]">{currentLesson.description}</p>
 
@@ -270,7 +270,7 @@ export default function LessonView() {
                   <motion.span
                     key={progress}
                     className="text-sm text-emerald-600 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full"
-                    initial={{ scale: 1.2, opacity: 0 }}
+                    initial={false}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   >
@@ -286,7 +286,7 @@ export default function LessonView() {
               {/* Mark as Complete button - Gradient and shadow */}
               {!completedLessons.has(selectedLessonId) && (
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={false}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
@@ -308,7 +308,7 @@ export default function LessonView() {
               {completedLessons.has(selectedLessonId) && (
                 <motion.div
                   className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center gap-3"
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={false}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >

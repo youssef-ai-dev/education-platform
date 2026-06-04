@@ -127,7 +127,7 @@ export default function CoursesView() {
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
@@ -152,7 +152,7 @@ export default function CoursesView() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 -mt-2">
         {/* Filter bar with glass-morphism */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 border border-white/60 p-6 mb-8"
@@ -251,7 +251,7 @@ export default function CoursesView() {
         <AnimatePresence>
           {filteredCourses.length === 0 && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={false}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               className="text-center py-24"
@@ -276,7 +276,7 @@ export default function CoursesView() {
             {filteredCourses.map((course, i) => (
               <motion.div
                 key={course.id}
-                initial={{ opacity: 0, y: 24 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.06, duration: 0.4, ease: 'easeOut' }}
               >

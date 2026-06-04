@@ -92,6 +92,26 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Fallback: ensure content is visible even if Framer Motion fails to hydrate */
+/* Framer Motion sets inline opacity:0 on initial state, this ensures visibility */
+@keyframes framer-motion-fallback {
+  from { visibility: hidden; }
+  to { visibility: visible; }
+}
+
+/* Show content after a short delay if JS hydration hasn't happened */
+body > * {
+  animation: framer-motion-fallback 0s 2s forwards;
+}
+
+/* Ensure critical content is always visible */
+.min-h-screen > .flex,
+.min-h-screen > main,
+.min-h-screen > header,
+.min-h-screen > section {
+  visibility: visible !important;
+}
+
 /* Page transition animation */
 @keyframes page-enter {
   from {
