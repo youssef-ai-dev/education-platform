@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'جميع الحقول مطلوبة' }, { status: 400 })
     }
 
-    const attempt = createQuizAttempt({ enrollmentId, quizId, answers, score, passed })
+    const attempt = await createQuizAttempt({ enrollmentId, quizId, answers, score, passed })
     return NextResponse.json(attempt, { status: 201 })
   } catch (error) {
     console.error('Quiz attempt POST error:', error)

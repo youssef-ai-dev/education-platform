@@ -3,7 +3,7 @@ import { seedData } from '@/lib/static-data'
 
 export async function POST() {
   try {
-    const result = seedData()
+    const result = await seedData()
     return NextResponse.json(result)
   } catch (error) {
     console.error('Seed error:', error)

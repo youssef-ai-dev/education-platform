@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label'
 import { ArrowRight, ArrowLeft, Clock, AlertTriangle, CheckCircle2, Zap, BookOpen } from 'lucide-react'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
-import { getCourseById } from '@/lib/static-data'
 
 interface QuizQuestion {
   id: string
@@ -43,16 +42,23 @@ export default function QuizView() {
 
   useEffect(() => {
     if (!selectedCourseId) return
-    const data = getCourseById(selectedCourseId)
-    if (data) {
-      const foundQuiz = data.quizzes?.find((q: { id: string }) => q.id === selectedQuizId)
-      if (foundQuiz) {
-        setQuiz(foundQuiz)
-        setAnswers(new Array(foundQuiz.questions.length).fill(-1))
-        setTimeLeft(foundQuiz.timeLimit * 60)
-      }
-    }
-    setLoading(false)
+    fetch(`/api/courses/${selectedCourseId}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Not found')
+        return res.json()
+      })
+      .then(data => {
+        const foundQuiz = data.quizzes?.find((q: { id: string }) => q.id === selectedQuizId)
+        if (foundQuiz) {
+          setQuiz(foundQuiz)
+          setAnswers(new Array(foundQuiz.questions.length).fill(-1))
+          setTimeLeft(foundQuiz.timeLimit * 60)
+        }
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
   }, [selectedCourseId, selectedQuizId])
 
   // Timer

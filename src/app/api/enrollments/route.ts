@@ -4,13 +4,13 @@ import { getEnrollments, createEnrollment } from '@/lib/static-data'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
+    const userId = searchParams.get('userId') || searchParams.get('email')
 
     if (!userId) {
       return NextResponse.json({ error: 'معرف المستخدم مطلوب' }, { status: 400 })
     }
 
-    const enrollments = getEnrollments(userId)
+    const enrollments = await getEnrollments(userId)
     return NextResponse.json(enrollments)
   } catch (error) {
     console.error('Enrollments GET error:', error)
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'جميع الحقول مطلوبة' }, { status: 400 })
     }
 
-    const result = createEnrollment({ userId, studentName, studentEmail, courseId })
+    const result = await createEnrollment({ userId, studentName, studentEmail, courseId })
 
     if (result.error) {
       return NextResponse.json({ error: result.error, enrollment: result.enrollment }, { status: 409 })

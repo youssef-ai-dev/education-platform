@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params
-    const course = getCourseById(id)
+    const course = await getCourseById(id)
 
     if (!course) {
       return NextResponse.json({ error: 'الدورة غير موجودة' }, { status: 404 })

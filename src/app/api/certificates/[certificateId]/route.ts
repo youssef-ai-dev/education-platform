@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { certificateId } = await params
-    const certificate = getCertificateByCertificateId(certificateId)
+    const certificate = await getCertificateByCertificateId(certificateId)
 
     if (!certificate) {
       return NextResponse.json({ error: 'الشهادة غير موجودة' }, { status: 404 })

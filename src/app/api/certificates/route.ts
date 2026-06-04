@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'البريد الإلكتروني مطلوب' }, { status: 400 })
     }
 
-    const certificates = getCertificates(email)
+    const certificates = await getCertificates(email)
     return NextResponse.json(certificates)
   } catch (error) {
     console.error('Certificates GET error:', error)

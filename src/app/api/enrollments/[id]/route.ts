@@ -14,7 +14,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'نسبة التقدم مطلوبة' }, { status: 400 })
     }
 
-    const enrollment = updateEnrollmentProgress(id, progress)
+    const enrollment = await updateEnrollmentProgress(id, progress)
 
     if (!enrollment) {
       return NextResponse.json({ error: 'التسجيل غير موجود' }, { status: 404 })

@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'معرف التسجيل مطلوب' }, { status: 400 })
     }
 
-    const result = generateCertificate(enrollmentId)
+    const result = await generateCertificate(enrollmentId)
 
     if (result.error) {
       return NextResponse.json({ error: result.error }, { status: 404 })

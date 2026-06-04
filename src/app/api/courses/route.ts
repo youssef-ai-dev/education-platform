@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category') || undefined
     const search = searchParams.get('search') || undefined
-    const courses = getCourses(category, search)
+    const courses = await getCourses(category, search)
     return NextResponse.json(courses)
   } catch (error) {
     console.error('Courses GET error:', error)
