@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { BookOpen, Mail, Lock, User, ArrowLeft, AlertCircle } from 'lucide-react'
+import { BookOpen, Mail, Lock, User, ArrowLeft, AlertCircle, Home } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 export default function SignInPage() {
@@ -29,13 +29,14 @@ export default function SignInPage() {
         password,
         name: isRegister ? name : undefined,
         redirect: false,
+        callbackUrl: '/',
       })
 
       if (result?.error) {
         setError('البريد الإلكتروني أو كلمة المرور غير صحيحة')
       } else {
-        router.push('/')
-        router.refresh()
+        // Success - redirect to home
+        window.location.href = '/'
       }
     } catch {
       setError('حدث خطأ أثناء تسجيل الدخول')
@@ -58,6 +59,14 @@ export default function SignInPage() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md relative"
       >
+        {/* Back to home button */}
+        <button
+          onClick={() => window.location.href = '/'}
+          className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors text-sm font-medium"
+        >
+          <Home className="w-4 h-4" />
+          العودة للرئيسية
+        </button>
         <Card className="border-0 shadow-2xl rounded-3xl overflow-hidden">
           {/* Top accent */}
           <div className="h-1.5 bg-gradient-to-l from-emerald-400 via-teal-400 to-emerald-500" />

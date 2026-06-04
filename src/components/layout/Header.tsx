@@ -17,12 +17,14 @@ import {
   LogOut,
   User as UserIcon,
 } from 'lucide-react'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function Header() {
   const { navigate, studentName, searchQuery, setSearchQuery, currentView, user, setUser, logout: storeLogout } =
     useAppStore()
   const { data: session } = useSession()
+  const router = useRouter()
 
   // Sync NextAuth session with Zustand store
   if (session?.user && !user) {
@@ -199,7 +201,7 @@ export default function Header() {
               </div>
             ) : (
               <Button
-                onClick={() => signIn()}
+                onClick={() => router.push('/signin')}
                 className="bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 h-10 px-5 rounded-xl font-semibold text-white shadow-md shadow-emerald-200/50 hover:shadow-lg transition-all duration-300 gap-2"
               >
                 <LogIn className="w-4 h-4" />
@@ -280,7 +282,7 @@ export default function Header() {
                     ) : (
                       <div className="mt-5">
                         <Button
-                          onClick={() => signIn()}
+                          onClick={() => { router.push('/signin'); setMobileOpen(false) }}
                           className="w-full bg-gradient-to-l from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 h-11 rounded-xl font-semibold text-white shadow-md shadow-emerald-200/50 gap-2"
                         >
                           <LogIn className="w-4 h-4" />
