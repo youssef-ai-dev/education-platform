@@ -25,3 +25,32 @@ Stage Summary:
 - API routes work correctly on Netlify (verified /api/courses returns 200)
 - All client components use proper ES imports instead of require()
 - Netlify deployment at https://gentle-starburst-b296c4.netlify.app/ should now show courses correctly
+---
+Task ID: 1-5
+Agent: Super Z (main)
+Task: Fix all 4 development issues + resolve Netlify deployment
+
+Work Log:
+- Analyzed root cause of Netlify deployment failure: prisma generate not running during build, .env with absolute local path
+- Updated netlify.toml: added prisma generate to build command, set DATABASE_URL/NEXTAUTH_SECRET/NEXTAUTH_URL env vars
+- Updated package.json build script to include prisma generate
+- Removed .env from git tracking (git rm --cached), created .env.example
+- Updated prisma/schema.prisma: added User model, userId in Enrollment, removed static studentsCount from Course, added Account/Session/VerificationToken for NextAuth
+- Updated src/lib/static-data.ts: added User interface and functions, dynamic getStudentsCount(), userId support in enrollments, getEnrollmentsByUserId()
+- Created src/app/api/auth/[...nextauth]/route.ts with credentials provider
+- Created src/app/(auth)/signin/page.tsx with beautiful Arabic login/register UI
+- Created src/components/AuthProvider.tsx (SessionProvider wrapper)
+- Updated src/app/layout.tsx to wrap with AuthProvider
+- Updated src/components/layout/Header.tsx with login/logout buttons, NextAuth session sync
+- Updated src/store/useAppStore.ts with user session support, logout action
+- Updated src/app/api/enrollments/route.ts to support userId parameter
+- Verified local build succeeds (next build)
+- Pushed to GitHub (will auto-deploy to Netlify)
+
+Stage Summary:
+- All 4 user-requested improvements implemented
+- Netlify build should now succeed with prisma generate in the pipeline
+- Authentication system ready with NextAuth.js
+- studentsCount is now dynamically computed
+- .env removed from git repo (security fix)
+- Build tested locally and passes successfully
