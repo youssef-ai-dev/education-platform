@@ -8,14 +8,6 @@ interface QuizResult {
   passed: boolean
 }
 
-interface UserSession {
-  id: string
-  name: string
-  email: string
-  image: string | null
-  role: string
-}
-
 interface AppState {
   currentView: ViewType
   selectedCourseId: string | null
@@ -27,15 +19,12 @@ interface AppState {
   certificateId: string | null
   searchQuery: string
   selectedCategory: string
-  user: UserSession | null
 
   navigate: (view: ViewType, data?: Record<string, string>) => void
   setStudentInfo: (name: string, email: string) => void
   setQuizResult: (result: QuizResult | null) => void
   setSearchQuery: (query: string) => void
   setSelectedCategory: (category: string) => void
-  setUser: (user: UserSession | null) => void
-  logout: () => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -49,7 +38,6 @@ export const useAppStore = create<AppState>((set) => ({
   certificateId: null,
   searchQuery: '',
   selectedCategory: 'الكل',
-  user: null,
 
   navigate: (view, data = {}) =>
     set((state) => ({
@@ -72,18 +60,4 @@ export const useAppStore = create<AppState>((set) => ({
 
   setSelectedCategory: (category) =>
     set({ selectedCategory: category }),
-
-  setUser: (user) =>
-    set({
-      user,
-      studentName: user?.name || '',
-      studentEmail: user?.email || '',
-    }),
-
-  logout: () =>
-    set({
-      user: null,
-      studentName: '',
-      studentEmail: '',
-    }),
 }))

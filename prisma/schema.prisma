@@ -7,21 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id           String   @id @default(cuid())
-  name         String
-  email        String   @unique
-  image        String?
-  passwordHash String?
-  provider     String   @default("credentials") // credentials, google, github
-  role         String   @default("student")     // student, instructor, admin
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  enrollments  Enrollment[]
-  accounts     Account[]
-  sessions     Session[]
-}
+// User management handled by Clerk - no User model needed here
+// Clerk provides: authentication, user profiles, roles, sessions
 
 model Course {
   id           String   @id @default(cuid())
@@ -42,7 +29,6 @@ model Course {
   enrollments  Enrollment[]
 
   // studentsCount is computed dynamically via _count.enrollments
-  // No need for a manual field - use: course._count.enrollments
 }
 
 model Lesson {
@@ -86,15 +72,14 @@ model QuizQuestion {
 
 model Enrollment {
   id           String    @id @default(cuid())
-  userId       String?   // Linked to User (optional for guest enrollments)
-  studentName  String    // Kept for display / guest enrollments
-  studentEmail String    // Kept for display / guest enrollments
+  userId       String    // Clerk user ID
+  studentName  String    // Cached from Clerk for display
+  studentEmail String    // Cached from Clerk for display
   courseId     String
   progress     Float     @default(0)
   enrolledAt   DateTime  @default(now())
   completedAt  DateTime?
 
-  user         User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
   course       Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
   quizAttempts QuizAttempt[]
   certificate  Certificate?
@@ -123,40 +108,4 @@ model Certificate {
   certificateId String   @unique
 
   enrollment    Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
-}
-
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
 }

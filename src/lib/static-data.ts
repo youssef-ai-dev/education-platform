@@ -1,13 +1,5 @@
 // Static data for portfolio demo - works on Netlify without database
-
-export interface StaticUser {
-  id: string
-  name: string
-  email: string
-  image: string | null
-  role: string
-  createdAt: string
-}
+// User management handled by Clerk
 
 export interface StaticLesson {
   id: string
@@ -42,7 +34,7 @@ export interface StaticQuiz {
 
 export interface StaticEnrollment {
   id: string
-  userId: string | null
+  userId: string // Clerk user ID
   studentName: string
   studentEmail: string
   courseId: string
@@ -68,6 +60,15 @@ export interface StaticCourse {
   quizzes: StaticQuiz[]
   enrollments: StaticEnrollment[]
   _count: { enrollments: number }
+}
+
+const BASE_ENROLLMENT_COUNTS: Record<string, number> = {
+  'course-web-dev': 1250,
+  'course-react': 2100,
+  'course-figma': 890,
+  'course-agile': 670,
+  'course-english': 1580,
+  'course-data': 980,
 }
 
 const courses: StaticCourse[] = [
@@ -310,27 +311,14 @@ let enrollments: StaticEnrollment[] = []
 let quizAttempts: any[] = []
 let certificates: any[] = []
 
-// In-memory users storage (portfolio demo)
-const users: StaticUser[] = [
-  {
-    id: 'user-demo-1',
-    name: 'طالب تجريبي',
-    email: 'student@example.com',
-    image: null,
-    role: 'student',
-    createdAt: '2024-01-01T00:00:00.000Z'
-  }
-]
-
 /**
  * Get students count dynamically from enrollments
- * Falls back to the base count from _count.enrollments
+ * Uses base count from hardcoded data + runtime enrollments
  */
 function getStudentsCount(courseId: string): number {
-  const course = courses.find(c => c.id === courseId)
-  if (!course) return 0
+  const baseCount = BASE_ENROLLMENT_COUNTS[courseId] || 0
   const runtimeEnrollments = enrollments.filter(e => e.courseId === courseId).length
-  return course._count.enrollments + runtimeEnrollments
+  return baseCount + runtimeEnrollments
 }
 
 export function getCourses(category?: string, search?: string): StaticCourse[] {
@@ -357,7 +345,6 @@ export function getCourses(category?: string, search?: string): StaticCourse[] {
 export function getCourseById(id: string): StaticCourse | undefined {
   const course = courses.find(c => c.id === id)
   if (!course) return undefined
-  // Update studentsCount dynamically
   return {
     ...course,
     studentsCount: getStudentsCount(course.id),
@@ -365,45 +352,8 @@ export function getCourseById(id: string): StaticCourse | undefined {
   }
 }
 
-// User functions
-export function getUserById(id: string): StaticUser | undefined {
-  return users.find(u => u.id === id)
-}
-
-export function getUserByEmail(email: string): StaticUser | undefined {
-  return users.find(u => u.email === email)
-}
-
-export function createUser(data: { name: string; email: string; passwordHash?: string; provider?: string }): StaticUser | { error: string } {
-  const existing = users.find(u => u.email === data.email)
-  if (existing) return { error: 'البريد الإلكتروني مستخدم بالفعل' }
-
-  const user: StaticUser = {
-    id: `user-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    name: data.name,
-    email: data.email,
-    image: null,
-    role: 'student',
-    createdAt: new Date().toISOString(),
-  }
-  users.push(user)
-  return user
-}
-
 // Enrollment functions
-export function getEnrollments(email: string) {
-  return enrollments.filter(e => e.studentEmail === email).map(e => {
-    const course = courses.find(c => c.id === e.courseId)
-    return {
-      ...e,
-      course: course || null,
-      quizAttempts: quizAttempts.filter(qa => qa.enrollmentId === e.id),
-      certificate: certificates.find(cert => cert.enrollmentId === e.id) || null
-    }
-  })
-}
-
-export function getEnrollmentsByUserId(userId: string) {
+export function getEnrollments(userId: string) {
   return enrollments.filter(e => e.userId === userId).map(e => {
     const course = courses.find(c => c.id === e.courseId)
     return {
@@ -415,8 +365,8 @@ export function getEnrollmentsByUserId(userId: string) {
   })
 }
 
-export function createEnrollment(data: { userId?: string; studentName: string; studentEmail: string; courseId: string }) {
-  const existing = enrollments.find(e => e.studentEmail === data.studentEmail && e.courseId === data.courseId)
+export function createEnrollment(data: { userId: string; studentName: string; studentEmail: string; courseId: string }) {
+  const existing = enrollments.find(e => e.userId === data.userId && e.courseId === data.courseId)
   if (existing) return { error: 'أنت مسجل بالفعل في هذه الدورة', enrollment: existing }
 
   const course = courses.find(c => c.id === data.courseId)
@@ -424,7 +374,7 @@ export function createEnrollment(data: { userId?: string; studentName: string; s
 
   const enrollment: StaticEnrollment = {
     id: `enr-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    userId: data.userId || null,
+    userId: data.userId,
     studentName: data.studentName,
     studentEmail: data.studentEmail,
     courseId: data.courseId,
@@ -459,10 +409,10 @@ export function createQuizAttempt(data: { enrollmentId: string; quizId: string; 
   return attempt
 }
 
-export function getCertificates(email: string) {
+export function getCertificates(userId: string) {
+  const userEnrollments = enrollments.filter(e => e.userId === userId)
   return certificates.filter(cert => {
-    const enrollment = enrollments.find(e => e.id === cert.enrollmentId)
-    return enrollment?.studentEmail === email
+    return userEnrollments.some(e => e.id === cert.enrollmentId)
   })
 }
 
