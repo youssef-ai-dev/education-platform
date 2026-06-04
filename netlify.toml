@@ -4,12 +4,13 @@
 
 [build.environment]
   DATABASE_URL = "file:./dev.db"
-  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_your_key_here"
-  CLERK_SECRET_KEY = "sk_test_your_key_here"
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_bGVnYWwtbWlkZ2UtNC5jbGVyay5hY2NvdW50cy5kZXYk"
+  CLERK_SECRET_KEY = "sk_test_cFJum7MSa9ndF4J9oNJ8M3gWzm5cYtY4nTb1fEm7ly"
   NEXT_PUBLIC_CLERK_SIGN_IN_URL = "/signin"
   NEXT_PUBLIC_CLERK_SIGN_UP_URL = "/signup"
   NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL = "/"
   NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL = "/"
+  NEXT_PUBLIC_CLERK_AFTER_SIGN_OUT_URL = "/"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
