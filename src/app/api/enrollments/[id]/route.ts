@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server'
 import { db } from '@/lib/db'
 import { validateBody, updateEnrollmentSchema } from '@/lib/validators'
 import { verifyEnrollmentOwnership } from '@/lib/auth'
+import { reportError } from '@/lib/error-reporting'
 
 export async function PATCH(
   request: NextRequest,
@@ -49,7 +50,7 @@ export async function PATCH(
       completedAt: updated.completedAt ? updated.completedAt.toISOString() : null,
     })
   } catch (error) {
-    console.error('Enrollment PATCH error:', error)
+    reportError(error, { context: 'enrollment-patch', id })
     return NextResponse.json({ error: 'حدث خطأ أثناء تحديث التقدم' }, { status: 500 })
   }
 }

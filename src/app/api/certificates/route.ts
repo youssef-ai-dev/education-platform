@@ -3,6 +3,7 @@ import { db } from '@/lib/db'
 import { validateQuery, getCertificatesQuerySchema } from '@/lib/validators'
 import { RATE_LIMITS } from '@/lib/rate-limit'
 import { withAuthRateLimit } from '@/lib/auth'
+import { reportError } from '@/lib/error-reporting'
 
 export async function GET(request: NextRequest) {
   try {
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(certificates)
   } catch (error) {
-    console.error('Certificates GET error:', error)
+    reportError(error, { context: 'certificates-get', userId })
     return NextResponse.json({ error: 'حدث خطأ أثناء جلب الشهادات' }, { status: 500 })
   }
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { reportError } from '@/lib/error-reporting'
 
 /**
  * Seed endpoint - ONLY available in development mode.
@@ -30,7 +31,7 @@ export async function POST() {
       seeded: true,
     })
   } catch (error) {
-    console.error('Seed error:', error)
+    reportError(error, { context: 'seed' })
     return NextResponse.json({ error: 'حدث خطأ أثناء عملية البذر' }, { status: 500 })
   }
 }

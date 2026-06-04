@@ -3,6 +3,7 @@ import { db } from '@/lib/db'
 import { validateBody, generateCertificateSchema } from '@/lib/validators'
 import { RATE_LIMITS } from '@/lib/rate-limit'
 import { withAuthRateLimit, verifyEnrollmentOwnership } from '@/lib/auth'
+import { reportError } from '@/lib/error-reporting'
 
 export async function POST(request: NextRequest) {
   try {
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
       },
     }, { status: 201 })
   } catch (error) {
-    console.error('Certificate generation error:', error)
+    reportError(error, { context: 'generate-certificate', userId })
     return NextResponse.json({ error: 'حدث خطأ أثناء إنشاء الشهادة' }, { status: 500 })
   }
 }

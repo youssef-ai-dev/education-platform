@@ -3,6 +3,7 @@ import { db } from '@/lib/db'
 import { validateBody, createQuizAttemptSchema } from '@/lib/validators'
 import { RATE_LIMITS } from '@/lib/rate-limit'
 import { withAuthRateLimit, verifyEnrollmentOwnership } from '@/lib/auth'
+import { reportError } from '@/lib/error-reporting'
 
 export async function POST(request: NextRequest) {
   try {
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
       completedAt: attempt.completedAt.toISOString(),
     }, { status: 201 })
   } catch (error) {
-    console.error('Quiz attempt POST error:', error)
+    reportError(error, { context: 'quiz-attempt-post', userId })
     return NextResponse.json({ error: 'حدث خطأ أثناء حفظ نتيجة الاختبار' }, { status: 500 })
   }
 }

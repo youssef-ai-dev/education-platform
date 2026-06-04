@@ -7,3 +7,20 @@ vi.mock('@vercel/kv', () => ({
     set: vi.fn().mockResolvedValue('OK'),
   },
 }))
+
+// Mock Sentry error reporting — it's an optional dependency
+vi.mock('@sentry/nextjs', () => ({
+  init: vi.fn(),
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
+  setUser: vi.fn(),
+  replayIntegration: () => ({}),
+}))
+
+// Mock error reporting utility
+vi.mock('@/lib/error-reporting', () => ({
+  reportError: vi.fn(),
+  reportWarning: vi.fn(),
+  setUserContext: vi.fn(),
+  clearUserContext: vi.fn(),
+}))

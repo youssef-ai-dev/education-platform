@@ -4,13 +4,15 @@ import { validateBody, validateQuery, createEnrollmentSchema, getEnrollmentsQuer
 import { RATE_LIMITS } from '@/lib/rate-limit'
 import { withAuthRateLimit } from '@/lib/auth'
 import { transformEnrollmentDetail, getStudentsCountBatch } from '@/lib/api-helpers'
+import { reportError } from '@/lib/error-reporting'
 
 export async function GET(request: NextRequest) {
+  let userId: string | undefined
   try {
     // 1. Auth + Rate limit (combined)
     const authResult = await withAuthRateLimit(request, 'enrollments-get', RATE_LIMITS.enrollments)
     if (authResult.error) return authResult.error
-    const { userId } = authResult
+    userId = authResult.userId
 
     // 2. Parse and validate query params
     const { searchParams } = new URL(request.url)
@@ -59,17 +61,18 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result)
   } catch (error) {
-    console.error('Enrollments GET error:', error)
+    reportError(error, { context: 'enrollments-get', userId })
     return NextResponse.json({ error: 'حدث خطأ أثناء جلب التسجيلات' }, { status: 500 })
   }
 }
 
 export async function POST(request: NextRequest) {
+  let userId: string | undefined
   try {
     // 1. Auth + Rate limit (combined)
     const authResult = await withAuthRateLimit(request, 'enrollments-post', RATE_LIMITS.enrollments)
     if (authResult.error) return authResult.error
-    const { userId } = authResult
+    userId = authResult.userId
 
     // 2. Parse and validate input
     const body = await request.json()
@@ -116,7 +119,7 @@ export async function POST(request: NextRequest) {
       course,
     }, { status: 201 })
   } catch (error) {
-    console.error('Enrollment POST error:', error)
+    reportError(error, { context: 'enrollment-post', userId })
     return NextResponse.json({ error: 'حدث خطأ أثناء التسجيل' }, { status: 500 })
   }
 }

@@ -3,6 +3,7 @@ import { db } from '@/lib/db'
 import { RATE_LIMITS } from '@/lib/rate-limit'
 import { withRateLimit } from '@/lib/auth'
 import { transformCourse, getStudentsCount } from '@/lib/api-helpers'
+import { reportError } from '@/lib/error-reporting'
 
 // Course detail is public — users should see course info before enrolling
 
@@ -41,7 +42,7 @@ export async function GET(
 
     return NextResponse.json(result)
   } catch (error) {
-    console.error('Course GET error:', error)
+    reportError(error, { context: 'course-detail-get', id })
     return NextResponse.json({ error: 'حدث خطأ أثناء جلب الدورة' }, { status: 500 })
   }
 }

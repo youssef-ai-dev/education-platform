@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { RATE_LIMITS } from '@/lib/rate-limit'
 import { withAuthRateLimit } from '@/lib/auth'
+import { reportError } from '@/lib/error-reporting'
 
 export async function GET(
   request: NextRequest,
@@ -41,7 +42,7 @@ export async function GET(
       enrollment: undefined, // Don't leak enrollment details
     })
   } catch (error) {
-    console.error('Certificate GET error:', error)
+    reportError(error, { context: 'certificate-detail-get', certificateId })
     return NextResponse.json({ error: 'حدث خطأ أثناء جلب الشهادة' }, { status: 500 })
   }
 }

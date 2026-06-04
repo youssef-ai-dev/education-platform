@@ -4,6 +4,7 @@ import { validateQuery, getCoursesQuerySchema } from '@/lib/validators'
 import { RATE_LIMITS } from '@/lib/rate-limit'
 import { withRateLimit } from '@/lib/auth'
 import { transformCourse, getStudentsCountBatch, buildCourseWhereClause } from '@/lib/api-helpers'
+import { reportError } from '@/lib/error-reporting'
 
 // Courses listing is public (no auth required) — users should see courses before signing up
 
@@ -46,7 +47,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result)
   } catch (error) {
-    console.error('Courses GET error:', error)
+    reportError(error, { context: 'courses-get' })
     return NextResponse.json({ error: 'حدث خطأ أثناء جلب الدورات' }, { status: 500 })
   }
 }
