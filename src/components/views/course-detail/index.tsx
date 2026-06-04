@@ -53,8 +53,6 @@ export default function CourseDetailView() {
 
   const enrollment = enrollmentOverride ?? enrollmentFromData
 
-  const loading = fetching
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50/80 py-8">
