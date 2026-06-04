@@ -1,8 +1,9 @@
 'use client'
 
-import { Component, type ReactNode, useState, useEffect, createContext, useContext } from 'react'
+import { ClerkProvider, useAuth as useClerkAuth, useUser as useClerkUser, SignIn, SignUp, UserButton as ClerkUserButton, SignInButton } from '@clerk/nextjs'
+import { Component, type ReactNode, createContext, useContext } from 'react'
 
-// Safe auth context that works even without Clerk
+// Safe auth context for components that need auth info
 interface AuthContextType {
   isSignedIn: boolean
   isLoaded: boolean
@@ -11,7 +12,7 @@ interface AuthContextType {
 
 const SafeAuthContext = createContext<AuthContextType>({
   isSignedIn: false,
-  isLoaded: true,
+  isLoaded: false,
   user: null,
 })
 
@@ -20,8 +21,37 @@ export function useAuth() {
 }
 
 export function useUser() {
-  const { user } = useContext(SafeAuthContext)
-  return { user, isLoaded: true }
+  const { user, isLoaded } = useContext(SafeAuthContext)
+  return { user, isLoaded }
+}
+
+// Bridge: reads Clerk auth state and provides it via SafeAuthContext
+function AuthBridge({ children }: { children: ReactNode }) {
+  let isSignedIn = false
+  let isLoaded = false
+  let user: { fullName?: string; firstName?: string; imageUrl?: string } | null = null
+
+  try {
+    const clerkAuth = useClerkAuth()
+    const clerkUser = useClerkUser()
+    isSignedIn = clerkAuth.isSignedIn ?? false
+    isLoaded = clerkAuth.isLoaded ?? false
+    if (clerkUser.user) {
+      user = {
+        fullName: clerkUser.user.fullName,
+        firstName: clerkUser.user.firstName,
+        imageUrl: clerkUser.user.imageUrl,
+      }
+    }
+  } catch {
+    // Clerk not available yet
+  }
+
+  return (
+    <SafeAuthContext.Provider value={{ isSignedIn, isLoaded, user }}>
+      {children}
+    </SafeAuthContext.Provider>
+  )
 }
 
 // Error boundary to catch Clerk initialization errors
@@ -35,38 +65,23 @@ class ClerkErrorBoundary extends Component<{ children: ReactNode }, { hasError: 
     return { hasError: true }
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  componentDidCatch(error: Error) {
     console.warn('ClerkProvider error (falling back to no-auth mode):', error.message)
   }
 
   render() {
     if (this.state.hasError) {
-      return this.props.children
+      return (
+        <SafeAuthContext.Provider value={{ isSignedIn: false, isLoaded: true, user: null }}>
+          {this.props.children}
+        </SafeAuthContext.Provider>
+      )
     }
     return this.props.children
   }
 }
 
-// Try to dynamically import Clerk
-function ClerkAuthProvider({ children }: { children: ReactNode }) {
-  const [ClerkProvider, setClerkProvider] = useState<any>(null)
-  const [clerkError, setClerkError] = useState(false)
-
-  useEffect(() => {
-    // Dynamic import of Clerk
-    import('@clerk/nextjs').then((mod) => {
-      setClerkProvider(() => mod.ClerkProvider)
-    }).catch((err) => {
-      console.warn('Clerk failed to load, running without auth:', err.message)
-      setClerkError(true)
-    })
-  }, [])
-
-  if (clerkError || !ClerkProvider) {
-    // No Clerk available - render children directly with safe defaults
-    return <SafeAuthContext.Provider value={{ isSignedIn: false, isLoaded: true, user: null }}>{children}</SafeAuthContext.Provider>
-  }
-
+function ClerkThemeProvider({ children }: { children: ReactNode }) {
   return (
     <ClerkErrorBoundary>
       <ClerkProvider
@@ -95,59 +110,11 @@ function ClerkAuthProvider({ children }: { children: ReactNode }) {
           },
         }}
       >
-        <ClerkAuthWrapper>{children}</ClerkAuthWrapper>
+        <AuthBridge>{children}</AuthBridge>
       </ClerkProvider>
     </ClerkErrorBoundary>
   )
 }
 
-// Wrapper that reads Clerk auth state safely
-function ClerkAuthWrapper({ children }: { children: ReactNode }) {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { useAuth: useClerkAuth, useUser: useClerkUser } = require('@clerk/nextjs')
-    const { isSignedIn, isLoaded } = useClerkAuth()
-    const { user } = useClerkUser()
-
-    return (
-      <SafeAuthContext.Provider value={{
-        isSignedIn: isSignedIn ?? false,
-        isLoaded: isLoaded ?? true,
-        user: user ? { fullName: user.fullName, firstName: user.firstName, imageUrl: user.imageUrl } : null,
-      }}>
-        {children}
-      </SafeAuthContext.Provider>
-    )
-  } catch {
-    return <SafeAuthContext.Provider value={{ isSignedIn: false, isLoaded: true, user: null }}>{children}</SafeAuthContext.Provider>
-  }
-}
-
-function ClerkThemeProvider({ children }: { children: ReactNode }) {
-  return <ClerkAuthProvider>{children}</ClerkAuthProvider>
-}
-
 export { ClerkThemeProvider as AuthProvider }
-
-// Re-export Clerk components with safe fallbacks
-export function SignInButton({ children, ...props }: any) {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const ClerkSignInButton = require('@clerk/nextjs').SignInButton
-    return <ClerkSignInButton {...props}>{children}</ClerkSignInButton>
-  } catch {
-    return <a href="/signin" {...props}>{children}</a>
-  }
-}
-
-export function UserButton({ ...props }: any) {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const ClerkUserButton = require('@clerk/nextjs').UserButton
-    return <ClerkUserButton {...props} />
-  } catch {
-    return <a href="/signin" className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-sm font-bold">?</a>
-  }
-}
-
-export { SignIn, SignUp } from '@clerk/nextjs'
+export { ClerkUserButton as UserButton, SignInButton, SignIn, SignUp }

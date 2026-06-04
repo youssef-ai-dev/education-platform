@@ -79,3 +79,24 @@ Stage Summary:
 - Site now renders correctly with all content visible
 - Browser verification passed: homepage, courses view, navigation all working
 - Screenshot saved to /home/z/my-project/download/site-verification.png
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Fix Clerk signin/signup page error - useSession can only be used within ClerkProvider
+
+Work Log:
+- Identified root cause: The dynamic import approach for ClerkProvider meant that SignIn/SignUp components from @clerk/nextjs were rendered without ClerkProvider being available
+- Rewrote AuthProvider.tsx to use static ClerkProvider import with AuthBridge pattern
+- AuthBridge component reads Clerk auth state and provides it via SafeAuthContext for other components
+- ClerkErrorBoundary catches initialization errors and falls back to no-auth mode
+- Removed dynamic import approach - ClerkProvider is now always available for SignIn/SignUp
+- Verified with agent-browser: homepage, signin, and signup pages all work without errors
+- No console errors on any page
+
+Stage Summary:
+- SignIn page now works correctly with ClerkProvider wrapping
+- SignUp page also works correctly  
+- Homepage continues to work
+- All pages return HTTP 200
+- No JavaScript errors in browser console
